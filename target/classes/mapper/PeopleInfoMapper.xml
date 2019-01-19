@@ -1,0 +1,291 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.atguigu.crud.dao.PeopleInfoMapper">
+  <resultMap id="BaseResultMap" type="com.atguigu.crud.bean.PeopleInfo">
+    <id column="peo_serial_num" jdbcType="INTEGER" property="peoSerialNum" />
+    <result column="peo_employee_id" jdbcType="INTEGER" property="peoEmployeeId" />
+    <result column="peo_employee_name" jdbcType="VARCHAR" property="peoEmployeeName" />
+    <result column="peo_password" jdbcType="VARCHAR" property="peoPassword" />
+    <result column="peo_phone" jdbcType="VARCHAR" property="peoPhone" />
+    <result column="peo_post" jdbcType="VARCHAR" property="peoPost" />
+    <result column="peo_address" jdbcType="VARCHAR" property="peoAddress" />
+    <result column="peo_email" jdbcType="VARCHAR" property="peoEmail" />
+    <result column="peo_image_path" jdbcType="VARCHAR" property="peoImagePath" />
+    <result column="peo_other" jdbcType="VARCHAR" property="peoOther" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    peo_serial_num, peo_employee_id, peo_employee_name, peo_password, peo_phone, peo_post, 
+    peo_address, peo_email, peo_image_path, peo_other
+  </sql>
+  <select id="selectByExample" parameterType="com.atguigu.crud.bean.PeopleInfoExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from people
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from people
+    where peo_serial_num = #{peoSerialNum,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from people
+    where peo_serial_num = #{peoSerialNum,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.atguigu.crud.bean.PeopleInfoExample">
+    delete from people
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.atguigu.crud.bean.PeopleInfo">
+    insert into people (peo_serial_num, peo_employee_id, peo_employee_name, 
+      peo_password, peo_phone, peo_post, 
+      peo_address, peo_email, peo_image_path, 
+      peo_other)
+    values (#{peoSerialNum,jdbcType=INTEGER}, #{peoEmployeeId,jdbcType=INTEGER}, #{peoEmployeeName,jdbcType=VARCHAR}, 
+      #{peoPassword,jdbcType=VARCHAR}, #{peoPhone,jdbcType=VARCHAR}, #{peoPost,jdbcType=VARCHAR}, 
+      #{peoAddress,jdbcType=VARCHAR}, #{peoEmail,jdbcType=VARCHAR}, #{peoImagePath,jdbcType=VARCHAR}, 
+      #{peoOther,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.atguigu.crud.bean.PeopleInfo">
+    insert into people
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="peoSerialNum != null">
+        peo_serial_num,
+      </if>
+      <if test="peoEmployeeId != null">
+        peo_employee_id,
+      </if>
+      <if test="peoEmployeeName != null">
+        peo_employee_name,
+      </if>
+      <if test="peoPassword != null">
+        peo_password,
+      </if>
+      <if test="peoPhone != null">
+        peo_phone,
+      </if>
+      <if test="peoPost != null">
+        peo_post,
+      </if>
+      <if test="peoAddress != null">
+        peo_address,
+      </if>
+      <if test="peoEmail != null">
+        peo_email,
+      </if>
+      <if test="peoImagePath != null">
+        peo_image_path,
+      </if>
+      <if test="peoOther != null">
+        peo_other,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="peoSerialNum != null">
+        #{peoSerialNum,jdbcType=INTEGER},
+      </if>
+      <if test="peoEmployeeId != null">
+        #{peoEmployeeId,jdbcType=INTEGER},
+      </if>
+      <if test="peoEmployeeName != null">
+        #{peoEmployeeName,jdbcType=VARCHAR},
+      </if>
+      <if test="peoPassword != null">
+        #{peoPassword,jdbcType=VARCHAR},
+      </if>
+      <if test="peoPhone != null">
+        #{peoPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="peoPost != null">
+        #{peoPost,jdbcType=VARCHAR},
+      </if>
+      <if test="peoAddress != null">
+        #{peoAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="peoEmail != null">
+        #{peoEmail,jdbcType=VARCHAR},
+      </if>
+      <if test="peoImagePath != null">
+        #{peoImagePath,jdbcType=VARCHAR},
+      </if>
+      <if test="peoOther != null">
+        #{peoOther,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.atguigu.crud.bean.PeopleInfoExample" resultType="java.lang.Long">
+    select count(*) from people
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update people
+    <set>
+      <if test="record.peoSerialNum != null">
+        peo_serial_num = #{record.peoSerialNum,jdbcType=INTEGER},
+      </if>
+      <if test="record.peoEmployeeId != null">
+        peo_employee_id = #{record.peoEmployeeId,jdbcType=INTEGER},
+      </if>
+      <if test="record.peoEmployeeName != null">
+        peo_employee_name = #{record.peoEmployeeName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.peoPassword != null">
+        peo_password = #{record.peoPassword,jdbcType=VARCHAR},
+      </if>
+      <if test="record.peoPhone != null">
+        peo_phone = #{record.peoPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="record.peoPost != null">
+        peo_post = #{record.peoPost,jdbcType=VARCHAR},
+      </if>
+      <if test="record.peoAddress != null">
+        peo_address = #{record.peoAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="record.peoEmail != null">
+        peo_email = #{record.peoEmail,jdbcType=VARCHAR},
+      </if>
+      <if test="record.peoImagePath != null">
+        peo_image_path = #{record.peoImagePath,jdbcType=VARCHAR},
+      </if>
+      <if test="record.peoOther != null">
+        peo_other = #{record.peoOther,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update people
+    set peo_serial_num = #{record.peoSerialNum,jdbcType=INTEGER},
+      peo_employee_id = #{record.peoEmployeeId,jdbcType=INTEGER},
+      peo_employee_name = #{record.peoEmployeeName,jdbcType=VARCHAR},
+      peo_password = #{record.peoPassword,jdbcType=VARCHAR},
+      peo_phone = #{record.peoPhone,jdbcType=VARCHAR},
+      peo_post = #{record.peoPost,jdbcType=VARCHAR},
+      peo_address = #{record.peoAddress,jdbcType=VARCHAR},
+      peo_email = #{record.peoEmail,jdbcType=VARCHAR},
+      peo_image_path = #{record.peoImagePath,jdbcType=VARCHAR},
+      peo_other = #{record.peoOther,jdbcType=VARCHAR}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.atguigu.crud.bean.PeopleInfo">
+    update people
+    <set>
+      <if test="peoEmployeeId != null">
+        peo_employee_id = #{peoEmployeeId,jdbcType=INTEGER},
+      </if>
+      <if test="peoEmployeeName != null">
+        peo_employee_name = #{peoEmployeeName,jdbcType=VARCHAR},
+      </if>
+      <if test="peoPassword != null">
+        peo_password = #{peoPassword,jdbcType=VARCHAR},
+      </if>
+      <if test="peoPhone != null">
+        peo_phone = #{peoPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="peoPost != null">
+        peo_post = #{peoPost,jdbcType=VARCHAR},
+      </if>
+      <if test="peoAddress != null">
+        peo_address = #{peoAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="peoEmail != null">
+        peo_email = #{peoEmail,jdbcType=VARCHAR},
+      </if>
+      <if test="peoImagePath != null">
+        peo_image_path = #{peoImagePath,jdbcType=VARCHAR},
+      </if>
+      <if test="peoOther != null">
+        peo_other = #{peoOther,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where peo_serial_num = #{peoSerialNum,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.atguigu.crud.bean.PeopleInfo">
+    update people
+    set peo_employee_id = #{peoEmployeeId,jdbcType=INTEGER},
+      peo_employee_name = #{peoEmployeeName,jdbcType=VARCHAR},
+      peo_password = #{peoPassword,jdbcType=VARCHAR},
+      peo_phone = #{peoPhone,jdbcType=VARCHAR},
+      peo_post = #{peoPost,jdbcType=VARCHAR},
+      peo_address = #{peoAddress,jdbcType=VARCHAR},
+      peo_email = #{peoEmail,jdbcType=VARCHAR},
+      peo_image_path = #{peoImagePath,jdbcType=VARCHAR},
+      peo_other = #{peoOther,jdbcType=VARCHAR}
+    where peo_serial_num = #{peoSerialNum,jdbcType=INTEGER}
+  </update>
+</mapper>
