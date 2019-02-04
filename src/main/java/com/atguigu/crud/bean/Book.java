@@ -3,7 +3,7 @@ package com.atguigu.crud.bean;
 import java.util.Date;
 
 public class Book {
-			private Integer serialNum;
+	private Integer serialNum;
 
     private Integer prePeopleId;
 
