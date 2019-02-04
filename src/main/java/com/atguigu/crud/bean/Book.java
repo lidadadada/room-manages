@@ -22,8 +22,26 @@ public class Book {
     private String preMemberPath;
 
     private String other;
+    
+    private PeopleInfo peopleInfo;
+    
+    @Override
+	public String toString() {
+		return "Book [serialNum=" + serialNum + ", prePeopleId=" + prePeopleId + ", preRoomNum=" + preRoomNum
+				+ ", preTheme=" + preTheme + ", preDay=" + preDay + ", preStartTime=" + preStartTime + ", preEndTime="
+				+ preEndTime + ", preJion=" + preJion + ", preMemberPath=" + preMemberPath + ", other=" + other
+				+ ", peopleInfo=" + peopleInfo + "]";
+	}
 
-    public Integer getSerialNum() {
+	public PeopleInfo getPeopleInfo() {
+		return peopleInfo;
+	}
+
+	public void setPeopleInfo(PeopleInfo peopleInfo) {
+		this.peopleInfo = peopleInfo;
+	}
+
+	public Integer getSerialNum() {
         return serialNum;
     }
 

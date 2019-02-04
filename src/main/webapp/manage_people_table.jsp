@@ -416,7 +416,6 @@
 		//ajax请求数据
 		//getRoomInfo("#book_room_add_select");
 		//弹出
-		
 		$("#bookAddModal").modal({
 			backdrop : 'static'
 		});

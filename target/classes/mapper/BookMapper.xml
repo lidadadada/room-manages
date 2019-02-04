@@ -13,6 +13,32 @@
     <result column="pre_member_path" jdbcType="VARCHAR" property="preMemberPath" />
     <result column="other" jdbcType="VARCHAR" property="other" />
   </resultMap>
+  
+  
+   <resultMap id="WithPeopleBaseResultMap" type="com.atguigu.crud.bean.Book">
+    <id column="serial_num" jdbcType="INTEGER" property="serialNum" />
+    <result column="pre_people_id" jdbcType="INTEGER" property="prePeopleId" />
+    <result column="pre_room_num" jdbcType="VARCHAR" property="preRoomNum" />
+    <result column="pre_theme" jdbcType="VARCHAR" property="preTheme" />
+    <result column="pre_day" jdbcType="DATE" property="preDay" />
+    <result column="pre_start_time" jdbcType="TIME" property="preStartTime" />
+    <result column="pre_end_time" jdbcType="TIME" property="preEndTime" />
+    <result column="pre_jion" jdbcType="INTEGER" property="preJion" />
+    <result column="pre_member_path" jdbcType="VARCHAR" property="preMemberPath" />
+    <result column="other" jdbcType="VARCHAR" property="other" />
+    <!-- 指定联合查询结果到bean的映射关系 -->
+    <association property="peopleInfo" javaType="com.atguigu.crud.bean.PeopleInfo">
+    	<id column="peo_employee_id" property="peoEmployeeId"/>
+    	<result column="peo_employee_name" property="peoEmployeeName"/>
+    	<result column="peo_phone" property="peoPhone"/>
+    	<result column="peo_post" property="peoPost"/>
+    	<result column="peo_image_path" property="peoImagePath"/>
+    	<result column="peo_address" property="peoAddress"/>
+    	<result column="peo_email" property="peoEmail"/>
+    </association>
+  </resultMap>
+  
+  
   <sql id="Example_Where_Clause">
     <where>
       <foreach collection="oredCriteria" item="criteria" separator="or">
@@ -75,6 +101,14 @@
     serial_num, pre_people_id, pre_room_num, pre_theme, pre_day, pre_start_time, pre_end_time, 
     pre_jion, pre_member_path, other
   </sql>
+  
+   <sql id="With_People_Base_Column_List">
+    b.serial_num, b.pre_people_id, b.pre_room_num, b.pre_theme, b.pre_day, b.pre_start_time, b.pre_end_time, 
+    b.pre_jion, b.pre_member_path, b.other, p.peo_serial_num, p.peo_employee_id,
+     p.peo_employee_name, p.peo_password, p.peo_phone, p.peo_post, 
+    p.peo_address, p.peo_email, p.peo_image_path, p.peo_other
+  </sql>
+  
   <select id="selectByExample" parameterType="com.atguigu.crud.bean.BookExample" resultMap="BaseResultMap">
     select
     <if test="distinct">
@@ -89,6 +123,23 @@
       order by ${orderByClause}
     </if>
   </select>
+  
+   <select id="selectByExampleWithPeople" parameterType="com.atguigu.crud.bean.BookExample" resultMap="WithPeopleBaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="With_People_Base_Column_List" />
+    from book b
+    left join people p on b.pre_people_id=p.peo_employee_id
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />

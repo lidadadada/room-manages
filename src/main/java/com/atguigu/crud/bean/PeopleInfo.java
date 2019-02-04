@@ -21,7 +21,15 @@ public class PeopleInfo {
 
     private String peoOther;
 
-    public Integer getPeoSerialNum() {
+    @Override
+	public String toString() {
+		return "PeopleInfo [peoSerialNum=" + peoSerialNum + ", peoEmployeeId=" + peoEmployeeId + ", peoEmployeeName="
+				+ peoEmployeeName + ", peoPassword=" + peoPassword + ", peoPhone=" + peoPhone + ", peoPost=" + peoPost
+				+ ", peoAddress=" + peoAddress + ", peoEmail=" + peoEmail + ", peoImagePath=" + peoImagePath
+				+ ", peoOther=" + peoOther + "]";
+	}
+
+	public Integer getPeoSerialNum() {
         return peoSerialNum;
     }
 

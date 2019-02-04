@@ -114,9 +114,14 @@ public class BookController {
 		if (managePeople != null) {
 			PageHelper.startPage(pn, 10); // 后面跟着的查询，就自动分页查询了
 			List<Book> lists = bookService.getAll();
-
+			System.out.println(lists.size());
+			for (Book book : lists) {
+				System.out.println(book.toString());
+				System.out.println(book.getPeopleInfo().toString());
+			}
 			// 使用pageinfo包装查询后的结果，获得各种分页 的信息 5:连续显示5页
 			PageInfo pageInfo = new PageInfo(lists, 5);
+			System.out.println("获取预定数据成功");
 			return Msg.success().add("pageInfo", pageInfo);
 		} else {
 			return Msg.fail().add("path", "/manage_index.jsp");

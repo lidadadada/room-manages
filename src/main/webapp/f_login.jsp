@@ -74,17 +74,14 @@
 		var emp_id=$("#emp_id").val();
 		var pass=$("#password").val();
 		var s=emp_id+"-"+pass;
-		alert(s);
 		$.ajax({
 			url : "${APP_PATH }/f/people/",
 			data : "loginData=" + s,
 			type : "POST",
-			success : function(result) {
-				alert("ddd");
-				alert(result); 
+			success : function(result) {		
 				if(result.code==100){
 					 var p= result.extend.path;
-					// alert(p);
+					 alert(p);
 					 window.location.href = "${APP_PATH}"+p;
 				 }
 				 else{

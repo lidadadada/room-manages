@@ -17,7 +17,8 @@ public interface BookMapper {
     int insertSelective(Book record);
 
     List<Book> selectByExample(BookExample example);
-
+    List<Book> selectByExampleWithPeople(BookExample example);
+    
     Book selectByPrimaryKey(Integer serialNum);
 
     int updateByExampleSelective(@Param("record") Book record, @Param("example") BookExample example);
@@ -27,4 +28,6 @@ public interface BookMapper {
     int updateByPrimaryKeySelective(Book record);
 
     int updateByPrimaryKey(Book record);
+
+	
 }

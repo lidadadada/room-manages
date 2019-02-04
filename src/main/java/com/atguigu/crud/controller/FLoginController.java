@@ -26,12 +26,13 @@ public class FLoginController {
 	@ResponseBody
 	public Msg checkUser(@RequestParam(value = "loginData", defaultValue = "1") String loginData
 			,HttpServletRequest request) {
+		System.out.println("登陆++++++++++++++++++");
 		if((!loginData.equals("1"))&&loginData.contains("-")){
 			String[] split = loginData.trim().split("-");
 			System.out.println(split[0]+"+"+split[1]);
 			if(split[0]!=null&&split[1]!=null&&split[0]!=""&&split[1]!="") {
 				System.out.println(split[0]+"+"+split[1]);
-				List<PeopleInfo> list = peopleService.selectByPrimaryEmployeeId(Integer.parseInt(split[0]));
+				List<PeopleInfo> list = peopleService.selectByPrimaryEmployeeName(split[0]);
 				if(list.size()>0) {
 					PeopleInfo peopleInfo = list.get(0);
 					if(peopleInfo!=null&&peopleInfo.getPeoPassword().equals(split[1])){

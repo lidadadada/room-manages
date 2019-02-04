@@ -20,7 +20,8 @@
 <script type="text/javascript"
 	src="${APP_PATH }/static/bootstrap-3.3.5-dist/js/bootstrap.min.js"></script>
 <script src="https://cdn.bootcss.com/bootstrap3-dialog/1.34.9/js/bootstrap-dialog.min.js"></script>
-
+<script type="text/javascript"
+	src="${APP_PATH }/static/js/util.js"></script>
 </head>
 <body>
 <nav class="navbar navbar-inverse navbar-fixed-top">
@@ -306,7 +307,10 @@
 					data : "pn=" + pn,
 					type : "GET",
 					success : function(result) {
+						
 						if(result.code==100){
+							console.log("获取员工数据成功");
+							console.log(result.extend);
 							//1、解析显示员工数据
 							build_book_table(result);
 							//2、解析显示分页信息
@@ -433,27 +437,7 @@
 			ul.append(nextPageLi).append(lastPageLi);
 			var navEle = $("<nav></nav>").append(ul).appendTo("#page_nav_area");
 		}
-		//获得年月日  
-		function getMyDate(str) {
-			var oDate = new Date(str), oYear = oDate.getFullYear(), oMonth = oDate
-					.getMonth() + 1, oDay = oDate.getDate(), oTime = oYear
-					+ '-' + getzf(oMonth) + '-' + getzf(oDay);//最后拼接时间
-			return getzf(oTime);
-		};
-		//获得时分秒 
-		function getMyhours(str) {
-			var oDate = new Date(str), oHour = oDate.getHours(), oMin = oDate
-					.getMinutes(), oSen = oDate.getSeconds(), oTime = getzf(oHour)
-					+ ':' + getzf(oMin) + ':' + getzf(oSen);//最后拼接时间
-			return oTime;
-		}
-		//补0操作
-		function getzf(num) {
-			if (parseInt(num) < 10) {
-				num = '0' + num;
-			}
-			return num;
-		}
+		
 
 		/* 点击新增添加模态框 */
 		$("#book_add_modal_btn").click(function() {
@@ -569,6 +553,7 @@
 						document.getElementById('book_theme_edit').value=results.extend.book.preTheme;
 						document.getElementById('book_date_edit').value=getMyDate(results.extend.book.preDay);
 						document.getElementById('book_start_time_edit').value=getMyhours(results.extend.book.preStartTime);
+					//	alert(getMyDate(results.extend.book.preDay));
 						document.getElementById('book_end_time_edit').value=getMyhours(results.extend.book.preEndTime);
 						document.getElementById('book_other_edit').value=results.extend.book.other;
 						document.getElementById('book_room_edit_select').value=results.extend.book.preRoomNum;
