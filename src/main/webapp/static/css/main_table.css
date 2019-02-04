@@ -1,0 +1,23 @@
+.course_table{ width: 100%;border-spacing: 0;}
+.course_table th{ height: 2.5em; background: #f3f8f8;color: #6d8498; font-weight: 400;font-size: 0.95em;}
+.course_table td{font-size:0.925em;height: 3em;border-bottom: 1px dashed #eee;text-align: center;-webkit-tap-highlight-color: rgba(0, 0, 0, 0);}
+.course_table tr td:first-child {background: #f3f8f8;color: #698196;border-bottom: none;}
+
+.add{background:#e1ebf2 center no-repeat;background-size: 100% 100%;height: 100%;color: #999999;line-height: 3em;width: 3em;margin:0 auto;
+    font-size: 0.925em;display: none;}
+.add span{font-size: 1.25em;color: #7993ab;}
+.add.on{display: block;}
+.course_all{padding-bottom: 0.5em;}
+        .yuwen,.shuxue,.yingyu,.wuli,.huaxue,.shengwu,.lishi,.zhengzhi,.meishu,.tiyu,.dili,.yinyue,.dele{font-size:0.925em;background: #adbeff; color: #FFF;width: 3em;  height: 100%;padding: 3px 0;box-sizing: border-box; margin: 0 auto; border-radius: 0.5em; line-height: 2em; background-url:none;}
+        .shuxue{background: #ff9e9f;}  .lishi{background: #ff9e9e;}
+        .yingyu{background: #ffdf62;}  .zhengzhi{background: #61e7f0;}
+        .wuli{background: #e4e275;}    .meishu{background: #fdc081;}
+        .huaxue{background: #c2b4f6;}  .dili{background: #62e48a;}
+        .shengwu{background: #ffc262;} .tiyu{background: #c2ec5c;}
+        .dele{background: #FFF;    color: #666666;} .yinyue{background: #c2ec5c;}
+        .course_all div{margin-right: 0.5em;}
+        .course_all div:nth-child(7){margin-right: 0;}
+        .add_kemu{padding: 0.5em;background: #ff9e9f;color: #FFF;border-radius: 0.25em;font-size: 0.85em;margin-left: 0.5em;}
+
+.course_all{padding:0.75em 0.5em 0em 0.5em;}
+.course_all div{width: 3em;height: 3em;text-align: center;display: inline-block;margin-bottom: 0.5em;}
