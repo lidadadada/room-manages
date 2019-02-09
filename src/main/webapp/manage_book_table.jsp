@@ -491,13 +491,15 @@
 			});
 			//判断员工号是否存在
 			$("#book_people_id_add").blur(function() {
+				console.log("判断员工号");
 				$.ajax({
-					url : "${APP_PATH }/people_save_model",
+					url : "${APP_PATH }/people_save_model_select",
 					type : "get",
 					data:"id="+document.getElementById("book_people_id_add").value,
 					success : function(result) {
 						if(result.code==100){
 							//添加员工名字和职位
+							console.log(result);
 							var item =result.extend.listPeopleInfo;
 							$("#people_name_model_span").text("姓名："+ item[0].peoEmployeeName);
 							$("#people_post_model_span").text("职位："+ item[0].peoPost);
@@ -510,10 +512,11 @@
 				});
 			});
 		}
+		
 		//模态框里保存预定记录
 		$("#book_add_save_btn").click(function() {
 			//1、校验数据,,正则表达式
-			
+			console.log($("#bookAddModal form").serialize());
 			//ajax保存	
 			$.ajax({
 				url : "${APP_PATH }/book_save_model",

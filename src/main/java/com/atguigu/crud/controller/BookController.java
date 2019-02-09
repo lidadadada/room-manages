@@ -135,7 +135,7 @@ public class BookController {
 	@ResponseBody
 	public Msg saveBookFromModel(@Valid BookInput book, BindingResult result) {
 		System.out.println("+++++++++++++++++++book.toString()" + book.toString());
-
+		System.out.println("保存预定数据");
 		// @Valid申明在封装的时候需要校验 BindingResult封装娇艳的结果
 		if (result.hasErrors()) {
 			// 校验失败
@@ -152,9 +152,11 @@ public class BookController {
 			books.setPrePeopleId(book.getPrePeopleId());
 			books.setPreRoomNum(book.getPreRoomNum());
 			books.setPreTheme(book.getPreTheme());
-			books.setPreDay(TimeUtil.stringToDate(book.getPreDay(), "yyyy-mm-dd"));
-			books.setPreStartTime(TimeUtil.stringToDate(book.getPreStartTime(), "hh:mm:ss"));
-			books.setPreEndTime(TimeUtil.stringToDate(book.getPreEndTime(), "hh:mm:ss"));
+			System.out.println(book.getPreDay()+"日期");
+			System.out.println(TimeUtil.stringToDate(book.getPreDay()+" 00:00:00", "yyyy-MM-dd HH:mm:ss")+"日期");
+			books.setPreDay(TimeUtil.stringToDate(book.getPreDay()+" 00:00:00", "yyyy-MM-dd HH:mm:ss"));
+			books.setPreStartTime(TimeUtil.stringToDate(book.getPreStartTime(), "HH:mm:ss"));
+			books.setPreEndTime(TimeUtil.stringToDate(book.getPreEndTime(), "HH:mm:ss"));
 			books.setOther(book.getOther());
 			books.setPreMemberPath("/" + book.getPreTheme() + "/member");
 			bookService.saveBook(books);

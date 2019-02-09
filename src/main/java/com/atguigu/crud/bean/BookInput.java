@@ -23,7 +23,14 @@ public class BookInput {
 
     private String other;
 
-    public Integer getSerialNum() {
+    @Override
+	public String toString() {
+		return "BookInput [serialNum=" + serialNum + ", prePeopleId=" + prePeopleId + ", preRoomNum=" + preRoomNum
+				+ ", preTheme=" + preTheme + ", preDay=" + preDay + ", preStartTime=" + preStartTime + ", preEndTime="
+				+ preEndTime + ", preJion=" + preJion + ", preMemberPath=" + preMemberPath + ", other=" + other + "]";
+	}
+
+	public Integer getSerialNum() {
         return serialNum;
     }
 

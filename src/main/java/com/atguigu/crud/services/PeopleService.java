@@ -24,8 +24,10 @@ public class PeopleService {
 	 * @return List<PeopleInfo>
 	 */
 	public List<PeopleInfo> getPeopleInfoById(Integer id){
-		//return peopleInfoMapper.selectByEmployeeId(id);
-		return null;
+		PeopleInfoExample peopleInfoExample = new PeopleInfoExample();
+		com.atguigu.crud.bean.PeopleInfoExample.Criteria criteria = peopleInfoExample.createCriteria();
+		criteria.andPeoEmployeeIdEqualTo(id);
+		return peopleInfoMapper.selectByExample(peopleInfoExample);
 	}
 	/**
 	 * 获得所有员工数据

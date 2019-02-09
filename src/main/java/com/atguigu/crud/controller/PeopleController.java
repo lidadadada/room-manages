@@ -2,7 +2,6 @@ package com.atguigu.crud.controller;
 /*
  * 处理人员相关的
  */
-
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.log;
 
 import java.util.ArrayList;
@@ -37,9 +36,6 @@ public class PeopleController {
 	PeopleService peopleService;
 	private HttpSession session;
 	private ManagePeople managePeople;
-
-	
-
 	/*
 	 * 更新
 	 */
@@ -49,7 +45,6 @@ public class PeopleController {
 		peopleService.update(peopleInfo);
 		return Msg.success();
 	}
-
 	/*
 	 * 表单里根据序号删除预定记录 ,,,,单个+多个 1-2-3 1
 	 */
@@ -70,9 +65,7 @@ public class PeopleController {
 			peopleService.deleteByPrimaryKey(Integer.parseInt(deleteNum));
 			return Msg.success();
 		}
-
 	}
-
 	/*
 	 * 编辑模态框数据回显
 	 */
@@ -87,7 +80,6 @@ public class PeopleController {
 		}
 		return Msg.fail();
 	}
-
 	/*
 	 * 根据页数 获取所有的people数据
 	 */
@@ -107,20 +99,22 @@ public class PeopleController {
 		else {
 			return Msg.fail().add("path", "/manage_index.jsp");
 		}
-
 	}
 
 	/*
 	 * 添加模态框中，根据员工号查找该员工信息，并判断是否存在
 	 */
-	@RequestMapping(value = "/people_save_model", method = RequestMethod.GET)
+	@RequestMapping(value = "/people_save_model_select", method = RequestMethod.GET)
 	@ResponseBody
 	public Msg getPeopleInfoById(@RequestParam(value = "id", defaultValue = "-1") Integer id) {
 		if (id != -1) {
-			List<PeopleInfo> lists = peopleService.getPeopleInfoById(id);
+			System.out.println("ajax检查员工号合法性");
+			List<PeopleInfo> lists = peopleService.getPeopleInfoById(1);
+			System.out.println(lists.size()+"dddddddddddddddddddddd");
 			if (lists.size() > 0) {
 				return Msg.success().add("listPeopleInfo", lists);
 			}
+			System.out.println(lists.get(0).toString());
 		}
 		return Msg.fail();
 	}

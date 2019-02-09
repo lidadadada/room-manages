@@ -19,6 +19,7 @@ public class TimeUtil {
 		try {
 		DateFormat dateFormat = new SimpleDateFormat(model);
 		day = dateFormat.parse(date);
+		System.out.println(day.getMonth()+"月份");
 		} catch (ParseException e) {
 			// TODO 自动生成的 catch 块
 			e.printStackTrace();

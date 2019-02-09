@@ -71,7 +71,7 @@ public class FMainController {
 	@ResponseBody
 	public Msg getBookTable(@PathVariable("date") String data) {
 		if (data != null && data != "") {
-			Date date = TimeUtil.stringToDate(data, "yyyy-mm-dd");
+			Date date = TimeUtil.stringToDate(data, "yyyy-MM-dd HH:mm:ss");
 			List<Book> list = fMainService.selectByDate(date);
 			System.out.println(F_MAIN_CONTROLLER + data);
 			System.out.println(list.size() + "++++++");
