@@ -728,6 +728,76 @@ public class BookExample {
             return (Criteria) this;
         }
 
+        public Criteria andPrePicturePathIsNull() {
+            addCriterion("pre_picture_path is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andPrePicturePathIsNotNull() {
+            addCriterion("pre_picture_path is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andPrePicturePathEqualTo(String value) {
+            addCriterion("pre_picture_path =", value, "prePicturePath");
+            return (Criteria) this;
+        }
+
+        public Criteria andPrePicturePathNotEqualTo(String value) {
+            addCriterion("pre_picture_path <>", value, "prePicturePath");
+            return (Criteria) this;
+        }
+
+        public Criteria andPrePicturePathGreaterThan(String value) {
+            addCriterion("pre_picture_path >", value, "prePicturePath");
+            return (Criteria) this;
+        }
+
+        public Criteria andPrePicturePathGreaterThanOrEqualTo(String value) {
+            addCriterion("pre_picture_path >=", value, "prePicturePath");
+            return (Criteria) this;
+        }
+
+        public Criteria andPrePicturePathLessThan(String value) {
+            addCriterion("pre_picture_path <", value, "prePicturePath");
+            return (Criteria) this;
+        }
+
+        public Criteria andPrePicturePathLessThanOrEqualTo(String value) {
+            addCriterion("pre_picture_path <=", value, "prePicturePath");
+            return (Criteria) this;
+        }
+
+        public Criteria andPrePicturePathLike(String value) {
+            addCriterion("pre_picture_path like", value, "prePicturePath");
+            return (Criteria) this;
+        }
+
+        public Criteria andPrePicturePathNotLike(String value) {
+            addCriterion("pre_picture_path not like", value, "prePicturePath");
+            return (Criteria) this;
+        }
+
+        public Criteria andPrePicturePathIn(List<String> values) {
+            addCriterion("pre_picture_path in", values, "prePicturePath");
+            return (Criteria) this;
+        }
+
+        public Criteria andPrePicturePathNotIn(List<String> values) {
+            addCriterion("pre_picture_path not in", values, "prePicturePath");
+            return (Criteria) this;
+        }
+
+        public Criteria andPrePicturePathBetween(String value1, String value2) {
+            addCriterion("pre_picture_path between", value1, value2, "prePicturePath");
+            return (Criteria) this;
+        }
+
+        public Criteria andPrePicturePathNotBetween(String value1, String value2) {
+            addCriterion("pre_picture_path not between", value1, value2, "prePicturePath");
+            return (Criteria) this;
+        }
+
         public Criteria andOtherIsNull() {
             addCriterion("other is null");
             return (Criteria) this;

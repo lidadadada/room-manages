@@ -11,11 +11,11 @@
     <result column="pre_end_time" jdbcType="TIME" property="preEndTime" />
     <result column="pre_jion" jdbcType="INTEGER" property="preJion" />
     <result column="pre_member_path" jdbcType="VARCHAR" property="preMemberPath" />
+    <result column="pre_picture_path" jdbcType="VARCHAR" property="prePicturePath" />
     <result column="other" jdbcType="VARCHAR" property="other" />
   </resultMap>
   
-  
-   <resultMap id="WithPeopleBaseResultMap" type="com.atguigu.crud.bean.Book">
+  <resultMap id="WithPeopleBaseResultMap" type="com.atguigu.crud.bean.Book">
     <id column="serial_num" jdbcType="INTEGER" property="serialNum" />
     <result column="pre_people_id" jdbcType="INTEGER" property="prePeopleId" />
     <result column="pre_room_num" jdbcType="VARCHAR" property="preRoomNum" />
@@ -25,6 +25,8 @@
     <result column="pre_end_time" jdbcType="TIME" property="preEndTime" />
     <result column="pre_jion" jdbcType="INTEGER" property="preJion" />
     <result column="pre_member_path" jdbcType="VARCHAR" property="preMemberPath" />
+    <result column="pre_picture_path" jdbcType="VARCHAR" property="prePicturePath" />
+    
     <result column="other" jdbcType="VARCHAR" property="other" />
     <!-- 指定联合查询结果到bean的映射关系 -->
     <association property="peopleInfo" javaType="com.atguigu.crud.bean.PeopleInfo">
@@ -68,6 +70,14 @@
       </foreach>
     </where>
   </sql>
+  
+  <sql id="With_People_Base_Column_List">
+    b.serial_num, b.pre_people_id,b.pre_picture_path, b.pre_room_num, b.pre_theme, b.pre_day, b.pre_start_time, b.pre_end_time, 
+    b.pre_jion, b.pre_member_path, b.other, p.peo_serial_num, p.peo_employee_id,
+     p.peo_employee_name, p.peo_password, p.peo_phone, p.peo_post, 
+    p.peo_address, p.peo_email, p.peo_image_path, p.peo_other
+  </sql>
+  
   <sql id="Update_By_Example_Where_Clause">
     <where>
       <foreach collection="example.oredCriteria" item="criteria" separator="or">
@@ -99,16 +109,8 @@
   </sql>
   <sql id="Base_Column_List">
     serial_num, pre_people_id, pre_room_num, pre_theme, pre_day, pre_start_time, pre_end_time, 
-    pre_jion, pre_member_path, other
+    pre_jion, pre_member_path, pre_picture_path, other
   </sql>
-  
-   <sql id="With_People_Base_Column_List">
-    b.serial_num, b.pre_people_id, b.pre_room_num, b.pre_theme, b.pre_day, b.pre_start_time, b.pre_end_time, 
-    b.pre_jion, b.pre_member_path, b.other, p.peo_serial_num, p.peo_employee_id,
-     p.peo_employee_name, p.peo_password, p.peo_phone, p.peo_post, 
-    p.peo_address, p.peo_email, p.peo_image_path, p.peo_other
-  </sql>
-  
   <select id="selectByExample" parameterType="com.atguigu.crud.bean.BookExample" resultMap="BaseResultMap">
     select
     <if test="distinct">
@@ -123,8 +125,14 @@
       order by ${orderByClause}
     </if>
   </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from book
+    where serial_num = #{serialNum,jdbcType=INTEGER}
+  </select>
   
-   <select id="selectByExampleWithPeople" parameterType="com.atguigu.crud.bean.BookExample" resultMap="WithPeopleBaseResultMap">
+  <select id="selectByExampleWithPeople" parameterType="com.atguigu.crud.bean.BookExample" resultMap="WithPeopleBaseResultMap">
     select
     <if test="distinct">
       distinct
@@ -140,12 +148,6 @@
     </if>
   </select>
   
-  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
-    select 
-    <include refid="Base_Column_List" />
-    from book
-    where serial_num = #{serialNum,jdbcType=INTEGER}
-  </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from book
     where serial_num = #{serialNum,jdbcType=INTEGER}
@@ -160,11 +162,11 @@
     insert into book (serial_num, pre_people_id, pre_room_num, 
       pre_theme, pre_day, pre_start_time, 
       pre_end_time, pre_jion, pre_member_path, 
-      other)
+      pre_picture_path, other)
     values (#{serialNum,jdbcType=INTEGER}, #{prePeopleId,jdbcType=INTEGER}, #{preRoomNum,jdbcType=VARCHAR}, 
       #{preTheme,jdbcType=VARCHAR}, #{preDay,jdbcType=DATE}, #{preStartTime,jdbcType=TIME}, 
       #{preEndTime,jdbcType=TIME}, #{preJion,jdbcType=INTEGER}, #{preMemberPath,jdbcType=VARCHAR}, 
-      #{other,jdbcType=VARCHAR})
+      #{prePicturePath,jdbcType=VARCHAR}, #{other,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.atguigu.crud.bean.Book">
     insert into book
@@ -195,6 +197,9 @@
       </if>
       <if test="preMemberPath != null">
         pre_member_path,
+      </if>
+      <if test="prePicturePath != null">
+        pre_picture_path,
       </if>
       <if test="other != null">
         other,
@@ -227,6 +232,9 @@
       </if>
       <if test="preMemberPath != null">
         #{preMemberPath,jdbcType=VARCHAR},
+      </if>
+      <if test="prePicturePath != null">
+        #{prePicturePath,jdbcType=VARCHAR},
       </if>
       <if test="other != null">
         #{other,jdbcType=VARCHAR},
@@ -269,6 +277,9 @@
       <if test="record.preMemberPath != null">
         pre_member_path = #{record.preMemberPath,jdbcType=VARCHAR},
       </if>
+      <if test="record.prePicturePath != null">
+        pre_picture_path = #{record.prePicturePath,jdbcType=VARCHAR},
+      </if>
       <if test="record.other != null">
         other = #{record.other,jdbcType=VARCHAR},
       </if>
@@ -288,6 +299,7 @@
       pre_end_time = #{record.preEndTime,jdbcType=TIME},
       pre_jion = #{record.preJion,jdbcType=INTEGER},
       pre_member_path = #{record.preMemberPath,jdbcType=VARCHAR},
+      pre_picture_path = #{record.prePicturePath,jdbcType=VARCHAR},
       other = #{record.other,jdbcType=VARCHAR}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
@@ -320,6 +332,9 @@
       <if test="preMemberPath != null">
         pre_member_path = #{preMemberPath,jdbcType=VARCHAR},
       </if>
+      <if test="prePicturePath != null">
+        pre_picture_path = #{prePicturePath,jdbcType=VARCHAR},
+      </if>
       <if test="other != null">
         other = #{other,jdbcType=VARCHAR},
       </if>
@@ -336,6 +351,7 @@
       pre_end_time = #{preEndTime,jdbcType=TIME},
       pre_jion = #{preJion,jdbcType=INTEGER},
       pre_member_path = #{preMemberPath,jdbcType=VARCHAR},
+      pre_picture_path = #{prePicturePath,jdbcType=VARCHAR},
       other = #{other,jdbcType=VARCHAR}
     where serial_num = #{serialNum,jdbcType=INTEGER}
   </update>

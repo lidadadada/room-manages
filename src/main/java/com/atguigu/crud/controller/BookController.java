@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.atguigu.crud.bean.Book;
 import com.atguigu.crud.bean.BookInput;
+import com.atguigu.crud.bean.BookPo;
 import com.atguigu.crud.bean.ManagePeople;
 import com.atguigu.crud.bean.Msg;
 import com.atguigu.crud.bean.PeopleInfo;
@@ -37,7 +38,7 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 
 @Controller
-public class BookController {
+public class BookController extends BaseController{
 	@Autowired
 	BookService bookService;
 	@Autowired
@@ -113,9 +114,9 @@ public class BookController {
 		managePeople = (ManagePeople) session.getAttribute("currentAdmin");
 		if (managePeople != null) {
 			PageHelper.startPage(pn, 10); // 后面跟着的查询，就自动分页查询了
-			List<Book> lists = bookService.getAll();
+			List<BookPo> lists = bookService.getAll();
 			System.out.println(lists.size());
-			for (Book book : lists) {
+			for (BookPo book : lists) {
 				System.out.println(book.toString());
 				System.out.println(book.getPeopleInfo().toString());
 			}
@@ -152,8 +153,8 @@ public class BookController {
 			books.setPrePeopleId(book.getPrePeopleId());
 			books.setPreRoomNum(book.getPreRoomNum());
 			books.setPreTheme(book.getPreTheme());
-			System.out.println(book.getPreDay()+"日期");
-			System.out.println(TimeUtil.stringToDate(book.getPreDay()+" 00:00:00", "yyyy-MM-dd HH:mm:ss")+"日期");
+			//System.out.println(book.getPreDay()+"日期");
+			//System.out.println(TimeUtil.stringToDate(book.getPreDay()+" 00:00:00", "yyyy-MM-dd HH:mm:ss")+"日期");
 			books.setPreDay(TimeUtil.stringToDate(book.getPreDay()+" 00:00:00", "yyyy-MM-dd HH:mm:ss"));
 			books.setPreStartTime(TimeUtil.stringToDate(book.getPreStartTime(), "HH:mm:ss"));
 			books.setPreEndTime(TimeUtil.stringToDate(book.getPreEndTime(), "HH:mm:ss"));

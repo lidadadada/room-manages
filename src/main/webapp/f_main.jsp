@@ -295,6 +295,93 @@
 			return i+":30:00";	 
 		}
 	}
+	
+	/* 获取暂存时间中的最大值 */
+	function getTimeMax(){
+		var record =0;
+		if(pre_time.length>0){
+			var temp=pre_time[0];
+			if(pre_time.length==1){
+				return temp;
+			}else{	
+				var s;
+				for(var i =1;i<pre_time.length;){
+				//	console.log("i:"+i+"   per:"+pre_time+"   per:"+pre_time[1]+"   per:"+pre_time[0]);
+					s = bijiao(temp,pre_time[i]);
+					if(s==-1){
+						temp=pre_time[i];
+						record=i;
+					}
+					i++;
+					//console.log("i:"+i);
+				}
+				var temps = pre_time[record];
+				pre_time.splice(record,1,pre_time[ pre_time.length-1]);
+				 pre_time.splice( pre_time.length-1,1,temps);
+			}
+		}
+		
+		return temp;
+	}
+	/* 获取暂存时间中的最小值 */
+	function getTimeMin(){
+		var record =0;
+		if(pre_time.length>0){
+			var temp=pre_time[0];
+			if(pre_time.length==1){
+				return temp;
+			}else{
+				var i =1;var s;
+				for(;i<pre_time.length;i++){
+					s = bijiao(temp,pre_time[i]);
+					if(s==1){
+						temp=pre_time[i];
+						record=i;
+					}
+				}
+				var temps = pre_time[record];
+				pre_time.splice(record,1,pre_time[0]);
+				pre_time.splice(0,1,temps);
+			}
+		}
+		return temp;
+	}
+	/* 比较两个时间字符串的大小 */
+	function bijiao(a,b) {
+	//	console.dir(b);
+	//	console.log("a:"+a+ "b:"+b);
+		var bbb = b.split(":");
+		var bs=parseInt(bbb[0]);
+		var as=parseInt(a.split(":")[0]);
+		//console.log("a:"+a+"  b:"+b+"  as:"+as+"  bs:"+bs);
+		if(as>bs){
+			return 1;
+		}else if(as<bs){
+			return -1;
+		}else{
+			if(parseInt(a.split(":")[1])>parseInt(b.split(":")[1])){
+				return 1;
+			}else if(parseInt(a.split(":")[1])<parseInt(b.split(":")[1])){
+				return -1;
+			}else{
+				return 0;
+			}
+		}
+	}
+	/* 增加半个小时 */
+	function addHalfhear(a){
+		var temp;
+		if(parseInt(a.split(":")[1])>0){
+			if(parseInt(a.split(":")[1])<9){
+				temp = "0"+parseInt(a.split(":")[0])+1+":00:00";
+			}else{
+				temp = parseInt(a.split(":")[0])+1+":00:00";
+			}
+		}else{
+			temp=a.split(":")[0]+":30:00";
+		}
+		return temp;
+	}
 	/* 时间转索引 */
 	function timeToIndex(time) {
 		var s =time.split(":");
@@ -310,155 +397,88 @@
 		//所点击方块的列索引号
 		var index=$(this).attr("index");
 		
-		//alert($(this).attr("class"));
+		console.log("索引号："+index);
 		//判断为原始的未选择的方块
 		if($(this).attr("class")=="btn btn-primary btn-lg"){
-			//alert("index"+index);
 			var time = ColIndexToTime(index);
-			//alert("time"+time);
+			console.log("time:"+time);
 			//获得行房间名
 			var name=$(this).parent().siblings()[0].innerHTML;
-			//alert("name"+name);
-			//alert(pre_room_name);
 			//第一次选择？
 			if(pre_room_name=="m"){
 				pre_room_name=name;
 				pre_time.push(time);
-				var secondetime='';
-				//暂存向后半个小时的时间点，两点形成时间段，，，选择7：00，则保存七点到七点半
-				if(parseInt(time.split(":")[1])>0){
-					var temp_zan = parseInt(time.split(":")[0])+1;
-					//7:00:00-->07:00:00
-					if(temp_zan>9){
-						secondetime =temp_zan+":00:00";
-					}else{
-						secondetime ="0"+temp_zan+":00:00";
-					}
-					
-				}
-				else{
-					var temp_zan = time.split(":")[0]; 
-						secondetime =temp_zan+":30:00";
-				}
-				pre_time.push(secondetime);
+				pre_time.push(addHalfhear(time));
 				//alert(pre_time[0]);
 				$(this).removeClass().addClass("btn btn-warning btn-lg");
 			}else{
 				//第二次以上的选择是同一行？
 				if(pre_room_name==name){
+					var flagdd=0;
 					var i=0;
-					for(;i<pre_time.length;i++){ 
-						//07：30：00转7.5
-						var bianli = parseInt(pre_time[i].split(":")[0]);
-						//alert("time"+time);
-						//alert("pre_time[i]"+pre_time[i]);
-						var now =parseInt(time.split(":")[0]);	
-						// alert("now"+now);
-						if(parseInt(pre_time[i].split(":")[1])>0){
-							bianli+=0.5;
-						}
-						if(parseInt(time.split(":")[1])>0){
-							now+=0.5;
-						}
-						/*alert("便利"+bianli);
-						alert("选中时间"+now);
-						alert("len"+pre_time.length); */ 
-						//此选择是暂存选择的相邻的就通过此选择
-						if(bianli-now==0.5||bianli-now==-0.5){
-							//点击8点，保存到8点半 
-							var secondetime='';
-							//暂存向后半个小时的时间点，两点形成时间段，，，选择7：00，则保存七点到七点半
-							if(parseInt(time.split(":")[1])>0){
-								var temp_zan = parseInt(time.split(":")[0])+1;
-								secondetime =temp_zan+":00:00";
-							}
-							else{
-								var temp_zan = time.split(":")[0]; 
-								secondetime = temp_zan+":30:00";
-							}
-							//alert(time);
-							pre_time.push(secondetime);
-							$(this).addClass("btn btn-warning");
-							break;
-						}
-						//此选择已经被选择过了
-						if(bianli-now==0){
-							break;
-						}
-						//遍历最后任然无前两项的匹配，则说明此选择是隔着选的
-						if(i==pre_time.length-1){						
-							alert("不允许中间隔着选择");
+					var nowTempTime=addHalfhear(time);
+					var max =getTimeMax();
+					console.log("++++++++++++++++"+time+getTimeMin());
+					if(bijiao(nowTempTime,max)==1){
+						var flagdd=1;
+						console.log("a1");
+						if(bijiao(nowTempTime,addHalfhear(getTimeMax()))==0){
+							console.log("a1a");
+							pre_time.push(nowTempTime);
+							$(this).addClass("btn btn-warning ");
+							}else{
+								console.log("a1b");
+								alert("不允许中间隔着选择a");
 						}
 					}
-				}
-				else{
-					//此选择是跨行选择
-					alert("您已经选择了"+pre_room_name+",请写提交或者点击取消");
-				}
-			}
-		}else{
-			//用于取消已选择方块的处理
-			//alert("取消选择");
-			var sindexMin=0;
-			var sindexMax=0;
+						else if(bijiao(time,getTimeMin())==-1){
+							flagdd=1;
+							console.log("a2");
+							if(bijiao(addHalfhear(time),getTimeMin())==0){
+								console.log("a2a");
+								pre_time.push(time);	
+								$(this).addClass("btn btn-warning");
+							}else{
+								console.log("a2b");
+								alert("不允许中间隔着选择b");
+							}	
+						}
+						
+							console.log("a3");
+							/* 取消选择 */
+							if(flagdd==0){
+								
+							}
+									
 			
-			//alert("index"+pre_time.length);
-			var i=0;
-			//查找已选择的最大和最小时间
-			console.log(pre_time);
-			for(;i<pre_time.length;i++){
-				var indexs= (timeToIndex(pre_time[i]));
-				var logs="index"+pre_time[i];
-				 console.log(logs);
-				 console.log(indexs); 
-				// console.log(pre_time[3]);
-				if(indexs<timeToIndex(pre_time[sindexMin])){
-					sindexMin=i;
-				}
-				if(indexs>timeToIndex(pre_time[sindexMax])){
-					sindexMax=i;
-				}
-			}
-			var temp=pre_time[0];
-			pre_time[0]=pre_time[sindexMin];
-			pre_time[sindexMin]=temp;
-			
-			temp=pre_time[pre_time.length-1];
-			pre_time[pre_time.length-1]=pre_time[sindexMax];
-			pre_time[sindexMax]=temp;
-			logs = "sindexMin:"+sindexMin+"sindexMax："+sindexMax;
-			console.log(logs);
-			console.log(pre_time);
-			//alert("index"+sindexMin+"..."+sindexMax);
-			//alert("index:"+index+"sindexMin:"+sindexMin+"sindexMax："+sindexMax);
-			sindexMin = timeToIndex(pre_time[0]);
-			sindexMax = timeToIndex(pre_time[pre_time.length-1]);
-			if(pre_time.length==2){
-				pre_time=[];
-				pre_room_name="m";
-				$(this).removeClass().addClass("btn btn-primary btn-lg");
-			}
-			else if(index==sindexMin||index==(sindexMax-1)){
-				//alert("in");
-				var logs = "index:"+index+"sindexMin:"+sindexMin+"sindexMax："+sindexMax;
-				console.log(logs);
-				if(index==sindexMin){
-					console.log("unshift");
-					pre_time.shift();
+								}
+				
+					else{
+						alert("不允许跨会议室选择，请取消已选择或者提交！");
+					}
+			}}else{
+				if(pre_time.length>2){
+					console.log("a3a");
+					if(bijiao(addHalfhear(time),getTimeMax())==0){
+						console.log("a3aa");
+						pre_time.pop();
+						$(this).removeClass().addClass("btn btn-primary btn-lg");
+					}
+					else if(bijiao(time,getTimeMin())==0){
+						console.log("a3ab");
+						pre_time.shift();
+						$(this).removeClass().addClass("btn btn-primary btn-lg");
+					}
 				}else{
-					alert("pop");
-					pre_time.pop();
+					console.log("a3b");
+					if(bijiao(time,getTimeMin())==0){
+						pre_time=[];
+						pre_room_name="m";
+						$(this).removeClass().addClass("btn btn-primary btn-lg");
+					}
 				}
-				$(this).removeClass().addClass("btn btn-primary btn-lg");
-				alert("ok");
 			}
-		}
-		
 		console.log(pre_time);
-		//console.log($(this).parent().siblings()[0].text());
-		//console.log(name);
-		 /* var roomname = name.text();
-			alert(roomname);  */
 	});
 	
 	$("#test").click(function () {
@@ -512,8 +532,8 @@
 			alert(cons_input);
 		//ajax保存	
 		$.ajax({
-			url : "${APP_PATH }/book_save_model",
-			type : "post",
+			url : "${APP_PATH }/f/main/upBook/",
+			type : "post",	
 			data : cons_input,
 			success : function(result) {
 				if (result.code == 100) {

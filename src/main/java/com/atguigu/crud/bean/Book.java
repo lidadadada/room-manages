@@ -3,7 +3,7 @@ package com.atguigu.crud.bean;
 import java.util.Date;
 
 public class Book {
-	private Integer serialNum;
+    private Integer serialNum;
 
     private Integer prePeopleId;
 
@@ -21,16 +21,18 @@ public class Book {
 
     private String preMemberPath;
 
+    private String prePicturePath;
+
     private String other;
-    
+
     private PeopleInfo peopleInfo;
     
     @Override
 	public String toString() {
 		return "Book [serialNum=" + serialNum + ", prePeopleId=" + prePeopleId + ", preRoomNum=" + preRoomNum
 				+ ", preTheme=" + preTheme + ", preDay=" + preDay + ", preStartTime=" + preStartTime + ", preEndTime="
-				+ preEndTime + ", preJion=" + preJion + ", preMemberPath=" + preMemberPath + ", other=" + other
-				+ ", peopleInfo=" + peopleInfo + "]";
+				+ preEndTime + ", preJion=" + preJion + ", preMemberPath=" + preMemberPath + ", prePicturePath="
+				+ prePicturePath + ", other=" + other + ", peopleInfo=" + peopleInfo + "]";
 	}
 
 	public PeopleInfo getPeopleInfo() {
@@ -111,6 +113,14 @@ public class Book {
 
     public void setPreMemberPath(String preMemberPath) {
         this.preMemberPath = preMemberPath == null ? null : preMemberPath.trim();
+    }
+
+    public String getPrePicturePath() {
+        return prePicturePath;
+    }
+
+    public void setPrePicturePath(String prePicturePath) {
+        this.prePicturePath = prePicturePath == null ? null : prePicturePath.trim();
     }
 
     public String getOther() {

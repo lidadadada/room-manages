@@ -5,4 +5,5 @@ package com.atguigu.crud.common;
 public class UserConfig {
 	public static boolean login=false;	//是否登陆
 	public static int employeeId;   //登陆者id
+	public static String basePath = "D:/room/room-manages/";
 }

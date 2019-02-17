@@ -4,6 +4,8 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,7 +18,7 @@ import com.atguigu.crud.bean.PeopleInfo;
 import com.atguigu.crud.services.PeopleService;
 
 @Controller
-public class FLoginController {
+public class FLoginController extends BaseController{
 	@Autowired
 	PeopleService peopleService;
 	/*
@@ -26,7 +28,8 @@ public class FLoginController {
 	@ResponseBody
 	public Msg checkUser(@RequestParam(value = "loginData", defaultValue = "1") String loginData
 			,HttpServletRequest request) {
-		System.out.println("登陆++++++++++++++++++");
+		getLog(this.getClass()).info("登陆成功");
+		//System.out.println("登陆++++++++++++++++++");
 		if((!loginData.equals("1"))&&loginData.contains("-")){
 			String[] split = loginData.trim().split("-");
 			System.out.println(split[0]+"+"+split[1]);
@@ -37,7 +40,7 @@ public class FLoginController {
 					PeopleInfo peopleInfo = list.get(0);
 					if(peopleInfo!=null&&peopleInfo.getPeoPassword().equals(split[1])){
 						request.getSession().setAttribute("currentUser", peopleInfo);
-						System.out.println("登陆");
+						//System.out.println("登陆");
 						return Msg.success().add("path", "/f_main.jsp");
 					}
 				}

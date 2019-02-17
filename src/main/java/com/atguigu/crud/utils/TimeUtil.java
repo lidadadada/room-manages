@@ -13,7 +13,7 @@ import java.util.Date;
 public class TimeUtil {
 	static Date day =null;
 	/*
-	 * string---->date
+	 * string---->date		"yyyy-MM-dd HH:mm:ss"
 	 */
 	public static Date stringToDate(String date,String model) {
 		try {

@@ -44,9 +44,10 @@
     </javaClientGenerator>
 
 	<!-- 指定每个表的生成策略 -->
-	<!-- <table tableName="book" domainObjectName="Book"></table>
-	<table tableName="people" domainObjectName="PeopleInfo"></table>
-	<table tableName="room_info" domainObjectName="RoomInfo"></table> -->
-	<table tableName="manage_people" domainObjectName="ManagePeople"></table>
+	<!--  <table tableName="book" domainObjectName="Book"></table>-->
+	<!-- <table tableName="book_file" domainObjectName="BookFile"></table> -->
+	<!-- <table tableName="reply" domainObjectName="Reply"></table>  -->
+	<!-- <table tableName="manage_people" domainObjectName="ManagePeople"></table>  -->
+	<table tableName="join_apply" domainObjectName="JoinApply"></table>
   </context>
 </generatorConfiguration>

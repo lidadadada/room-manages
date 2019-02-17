@@ -14,7 +14,19 @@ function getMyhours(str) {
 			+ ':' + getzf(oMin) + ':' + getzf(oSen);// 最后拼接时间
 	return oTime;
 }
-
+// 获得年月日 时分秒
+function getMyDateAndHours(str) {
+	var oDatea = getMyDate(str);
+	var oDate =  getMyhours(str);
+	return oDatea+" "+oDate;
+}
+// 获得时分
+function getMyhoursNoSecond(str) {
+	var oDate = new Date(str), oHour = oDate.getHours(), oMin = oDate
+			.getMinutes(), oSen = oDate.getSeconds(), oTime = getzf(oHour)
+			+ ':' + getzf(oMin);// 最后拼接时间
+	return oTime;
+}
 // 补0操作
 function getzf(num) {
 	if (parseInt(num) < 10) {
