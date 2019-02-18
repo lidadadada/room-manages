@@ -1,11 +1,15 @@
 package com.atguigu.crud.test;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.commons.net.ftp.FTP;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.LoggerFactory;
@@ -14,11 +18,14 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.atguigu.crud.bean.Book;
+import com.atguigu.crud.bean.BookExample;
+import com.atguigu.crud.bean.BookExample.Criteria;
 import com.atguigu.crud.bean.PeopleInfo;
 import com.atguigu.crud.dao.BookMapper;
 import com.atguigu.crud.dao.PeopleInfoMapper;
 import com.atguigu.crud.dao.RoomInfoMapper;
 import com.atguigu.crud.services.PeopleService;
+import com.atguigu.crud.utils.FTPUtil;
 import com.atguigu.crud.utils.TimeUtil;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -79,9 +86,12 @@ public class DaoTest {
 	 */
 	@Test
 	public void testLog() {
-		org.slf4j.Logger logger = LoggerFactory.getLogger(this.getClass());
-		System.out.println(this.getClass().getName());
-		System.out.println(logger.getName());
+
+		BookExample bookExample = new BookExample();
+		Criteria createCriteria = bookExample.createCriteria();
+		createCriteria.andPreThemeLike("%ss%");
+		List<Book> selectByExample = bookMapper.selectByExample(bookExample);
+		System.out.println("dddd:"+selectByExample.size());
 	}
 
 }

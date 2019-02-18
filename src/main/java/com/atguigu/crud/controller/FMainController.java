@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -123,7 +124,7 @@ public class FMainController extends BaseController {
 				books.setPreEndTime(TimeUtil.stringToDate(book.getPreEndTime(), "HH:mm:ss"));
 				books.setOther(book.getOther());
 				getLog(this.getClass()).info("进入createNameTable");
-				String table = MemberUtil.createNameTable(book.getPreTheme(), book.getPreDay());
+				String table = MemberUtil.createNameTable(peopleInfo.getPeoEmployeeId()+UUID.randomUUID().toString().substring(0, 5), book.getPreDay());
 				MemberUtil.jionMemeber(table, peopleInfo.getPeoEmployeeId(),books.getSerialNum());
 				books.setPreMemberPath(table);
 				getLog(this.getClass()).info("保存订单::"+books.toString());

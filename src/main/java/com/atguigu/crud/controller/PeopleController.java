@@ -31,7 +31,7 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 
 @Controller
-public class PeopleController {
+public class PeopleController extends BaseController{
 	@Autowired
 	PeopleService peopleService;
 	private HttpSession session;
@@ -92,6 +92,7 @@ public class PeopleController {
 		if (managePeople != null) {
 			PageHelper.startPage(pn, 10); // 后面跟着的查询，就自动分页查询了
 			List<PeopleInfo> lists = peopleService.getAll();
+			System.out.println("getAll,list:"+lists.size());
 			// 使用pageinfo包装查询后的结果，获得各种分页 的信息 5:连续显示5页
 			PageInfo pageInfo = new PageInfo(lists, 5);
 			return Msg.success().add("pageInfo", pageInfo);
@@ -108,9 +109,9 @@ public class PeopleController {
 	@ResponseBody
 	public Msg getPeopleInfoById(@RequestParam(value = "id", defaultValue = "-1") Integer id) {
 		if (id != -1) {
-			System.out.println("ajax检查员工号合法性");
-			List<PeopleInfo> lists = peopleService.getPeopleInfoById(1);
-			System.out.println(lists.size()+"dddddddddddddddddddddd");
+			System.out.println("ajax检查员工号是否存在");
+			getLog(this.getClass()).info("ajax检查员工号是否存在:"+id);
+			List<PeopleInfo> lists = peopleService.getPeopleInfoById(id);
 			if (lists.size() > 0) {
 				return Msg.success().add("listPeopleInfo", lists);
 			}

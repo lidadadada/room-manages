@@ -10,64 +10,38 @@
 	pageContext.setAttribute("APP_PATH", request.getContextPath());
 %>
 <!-- 以/开始的，找资源，以服务器的路径为基准 -->
-<script type="text/javascript"
-	src="${APP_PATH }/static/js/jquery-1.11.3.min.js"></script>
-<link
-	href="${APP_PATH }/static/bootstrap-3.3.5-dist/css/bootstrap.min.css"
-	rel="stylesheet">
-<script type="text/javascript"
-	src="${APP_PATH }/static/bootstrap-3.3.5-dist/js/bootstrap.min.js"></script>
-	
-<link rel="stylesheet" href="${APP_PATH }/static/jquery-ui-1.11.4.custom/jquery-ui.css">
-  <script src="${APP_PATH }/static/jquery-ui-1.11.4.custom/jquery-ui.js"></script>
 
- 
- <link href="${APP_PATH }/static/css/show_list.css" rel="stylesheet">
-<link href="${APP_PATH }/static/css/my_show_list.css" rel="stylesheet">
 
-<script type="text/javascript"
-	src="${APP_PATH }/static/js/util.js"></script>
-
-  
-  	<script>
-  $(function() {
-    $( "#accordion" ).accordion({
-    	 heightStyle: "content",
-    	 collapsible: true
-    });
-  });
-  </script>
+<link rel="stylesheet" type="text/css" href="${APP_PATH }/static/AlertPlugin/demo.css" />
+<link rel="stylesheet" href="${APP_PATH }/static/font/font-awesome-4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" type="text/css" href="${APP_PATH }/static/AlertPlugin/tooltip-line.css" />
+<!--[if IE]>
+<script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+<![endif]-->
 </head>
 <body>
-
 	
-		<div>	
-	<ui>
-<div id="accordion">
-  <div>
-  	河（湖）长组织体系建设
-  </div>
-  <div>
-  	河（湖）长组织体系建设
-  </div>
-  <h2>二、河（湖）长制制度及机制建设情况</h2>
-  <div>
+<!-- 
+<link rel="shortcut icon" href="../favicon.ico">
+<link rel="stylesheet" type="text/css" href="css/normalize.css" />
+<link rel="stylesheet" type="text/css" href="css/demo.css" /> -->
 
-  </div>
-  <h3>三、河（湖）长履职情况</h3>
-  <div>
-  		
-  </div>
-  <h3>四、工作组织推进情况</h3>
-  <div>
-    	
-    </div>
-  <h3>五、河湖治理保护及成效</h3>
-  <div>
-    
-  	</div>
-  	</div>
-  	</ui>
-  	</div>
-	</body>
-	</html>
+<!--必要样式表-->
+
+
+
+
+<div class="content">
+
+	<div class="dummy dummy-menu">
+		<ul>
+			<li>
+				<a class="tooltip" href="#"><i class="fa fa-fw fa-envelope-o"></i><span class="tooltip-content"><span class="tooltip-text"><span class="tooltip-inner">Howdy, Ben!<br /> There are 13 unread messages in your inbox.</span></span></span></a>
+			</li>
+		</ul>
+	</div>
+
+</div>
+
+</body>
+</html>

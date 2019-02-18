@@ -48,6 +48,6 @@
 	<!-- <table tableName="book_file" domainObjectName="BookFile"></table> -->
 	<!-- <table tableName="reply" domainObjectName="Reply"></table>  -->
 	<!-- <table tableName="manage_people" domainObjectName="ManagePeople"></table>  -->
-	<table tableName="join_apply" domainObjectName="JoinApply"></table>
+	<table tableName="un_emp_id" domainObjectName="UnEmpid"></table>
   </context>
 </generatorConfiguration>

@@ -26,13 +26,23 @@ public class Book {
     private String other;
 
     private PeopleInfo peopleInfo;
+
     
-    @Override
+    private int ApplyState;		//该用户申请该会议的状态   0：未申请，1：审核中，2：已加入
+    public int getApplyState() {
+		return ApplyState;
+	}
+
+	public void setApplyState(int applyState) {
+		ApplyState = applyState;
+	}
+
+	@Override
 	public String toString() {
 		return "Book [serialNum=" + serialNum + ", prePeopleId=" + prePeopleId + ", preRoomNum=" + preRoomNum
 				+ ", preTheme=" + preTheme + ", preDay=" + preDay + ", preStartTime=" + preStartTime + ", preEndTime="
 				+ preEndTime + ", preJion=" + preJion + ", preMemberPath=" + preMemberPath + ", prePicturePath="
-				+ prePicturePath + ", other=" + other + ", peopleInfo=" + peopleInfo + "]";
+				+ prePicturePath + ", other=" + other + ", peopleInfo=" + peopleInfo.toString() + "]";
 	}
 
 	public PeopleInfo getPeopleInfo() {

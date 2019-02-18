@@ -72,6 +72,13 @@
 							<br>
 							<div id="book_time_add" class="col-sm-6"></div>
 						</div>
+						<div class="form-group">
+							<label class="col-sm-2 control-label">会议头像</label>
+							<div class="col-sm-10">
+								<input type="file" name="other" class="form-control"	 accept="image/*"
+									id="book_image_add" placeholder="在此处填写其它相关说明信息">
+							</div>
+						</div>
 					</form>
 				</div>
 				<div class="modal-footer">
@@ -84,7 +91,7 @@
 	</div>
 
 <div class="container">
-	<body>
+	<div id="tables"class="rol">
 		<table class="course_table">
 			<tbody id="course_html">
 				<tr>
@@ -119,8 +126,9 @@
 
 			</tbody>
 		</table>
+		</div>
 		<button type="button" id="submit" class="btn btn-default btn-lg">提交</button>
-		<button type="button" id="test" class="btn btn-default btn-lg">测试</button>
+		<button type="button" id="clearBtn" class="btn btn-default btn-lg">清除</button>
 </div>
 <script type="text/javascript">
 	var sindexMins=0;
@@ -241,6 +249,195 @@
 			}
 		});
 	}
+	
+	/* 点击方块事件处理 */
+	$(document).on("click","#table_btn",function () {
+		//所点击方块的列索引号
+		var index=$(this).attr("index");
+		var time = ColIndexToTime(index);	
+		console.log("索引号："+index);
+		//判断为原始的未选择的方块
+		if($(this).attr("class")=="btn btn-primary btn-lg"){
+			
+			console.log("time:"+time);
+			//获得行房间名
+			var name=$(this).parent().siblings()[0].innerHTML;
+			//第一次选择？
+			if(pre_room_name=="m"){
+				pre_room_name=name;
+				pre_time.push(time);
+				pre_time.push(addHalfhear(time));
+				//alert(pre_time[0]);
+				$(this).removeClass().addClass("btn btn-warning btn-lg");
+			}else{
+				//第二次以上的选择是同一行？
+				if(pre_room_name==name){
+					var flagdd=0;
+					var i=0;
+					var nowTempTime=addHalfhear(time);
+					var max =getTimeMax();
+					console.log("++++++++++++++++"+time+getTimeMin());
+					if(bijiao(nowTempTime,max)==1){
+						var flagdd=1;
+						console.log("a1");
+						if(bijiao(nowTempTime,addHalfhear(getTimeMax()))==0){
+							console.log("a1a");
+							pre_time.push(nowTempTime);
+							$(this).removeClass().addClass("btn btn-warning btn-lg");
+							}else{
+								console.log("a1b");
+								alert("不允许中间隔着选择a");
+						}
+					}
+						else if(bijiao(time,getTimeMin())==-1){
+							flagdd=1;
+							console.log("a2");
+							if(bijiao(addHalfhear(time),getTimeMin())==0){
+								console.log("a2a");
+								pre_time.push(time);	
+								$(this).removeClass().addClass("btn btn-warning btn-lg");
+							}else{
+								console.log("a2b");
+								alert("不允许中间隔着选择b");
+							}	
+						}
+				}
+					else{
+						alert("不允许跨会议室选择，请取消已选择或者提交！");
+					}
+			}}else{
+				/* 取消选择 */
+				if(pre_time.length>2){
+					console.log("a3a");
+					if(bijiao(addHalfhear(time),getTimeMax())==0){
+						console.log("a3aa");
+						pre_time.pop();
+						$(this).removeClass().addClass("btn btn-primary btn-lg");
+					}
+					else if(bijiao(time,getTimeMin())==0){
+						console.log("a3ab");
+						pre_time.shift();
+						$(this).removeClass().addClass("btn btn-primary btn-lg");
+					}
+				}else{
+					console.log("a3b");
+					if(bijiao(time,getTimeMin())==0){
+						pre_time=[];
+						pre_room_name="m";
+						$(this).removeClass().addClass("btn btn-primary btn-lg");
+					}
+				}
+			}
+		console.log(pre_time);
+	});
+	/* 清楚选择 */
+	$("#clearBtn").click(function () {
+		$("#tables .btn-warning").removeClass().addClass("btn btn-primary btn-lg");
+		pre_time=[];
+		pre_room_name="m";
+	});
+	/* 模态框里的保存 */
+	$("#submit").click(function () {
+		var i=0;
+		if(pre_time.length==0){
+			alert("您未选择任何时间");
+		}else{
+			var stime="";
+			for(;i<pre_time.length;i++){
+				var index= (timeToIndex(pre_time[i]));
+				if(index<timeToIndex(pre_time[sindexMins])){
+					sindexMins=i;
+				}
+				if(index>timeToIndex(pre_time[sindexMaxs])){
+					sindexMaxs=i;
+				}
+			}
+			/* 提交打开确认模态框 */
+			alert(sindexMins+"-"+sindexMaxs);
+			$("#bookAddModal").modal({
+				backdrop:"static"
+			});
+			//重置模态框数据
+			reset_dailog();
+			document.getElementById('book_room_add_select').innerHTML ="当前拟选会议室：<label class='ontrol-label'>"+pre_room_name+"</label>";
+			document.getElementById('book_date_add').innerHTML="选择日期：<label class='ontrol-label'>"+date_id+"</label>";
+			//alert(sindexMin);	
+			document.getElementById('book_time_add').innerHTML="预定时间：<label class='ontrol-label'>"+pre_time[sindexMins]+"</label>"+"到<label class='ontrol-label'>"+pre_time[sindexMaxs]+"</label>";
+			
+			//stime = stime.subString(0,pre_time.length-1);
+			//alert("stime"+stime);
+		}
+		
+	});
+	//模态框里保存预定记录
+	$("#book_add_save_btn").click(function() {
+		//1、校验数据,,正则表达式
+		alert("DDD");
+		console.log("sindexMins"+sindexMins+"sindexMaxs"+sindexMaxs);	
+		var cons_input="prePeopleId="+document.getElementById("book_people_id_add").value+
+			"&preRoomNum="+encodeURI(pre_room_name)+"&preTheme="+encodeURI(document.getElementById("book_theme_add").value)
+			+"&preDay="+date_id+"&preStartTime="+encodeURI(pre_time[sindexMins])+
+			"&preEndTime="+encodeURI(pre_time[sindexMaxs])+"&other="+encodeURI(document.getElementById("book_other_add").value)
+			alert(cons_input);
+		//ajax保存	
+		$.ajax({
+			url : "${APP_PATH }/f/main/upBook/",
+			type : "post",	
+			data : cons_input,
+			success : function(result) {
+				if (result.code == 100) {
+					//保存成功之后，1、关闭模态框，2、跳到最后一页
+					$("#bookAddModal").modal('hide');
+					$("[index]").empty();
+					$("[index]").remove();
+					//还原暂存信息
+					pre_time=[];
+					pre_room_name="m";
+					init();
+				} else {
+					alert("保存失败！");
+				}
+			}
+		});
+	});
+	
+	//判断员工号是否存在
+	$("#book_people_id_add").blur(function() {
+		console.log("判断员工号");
+		$.ajax({
+			url : "${APP_PATH }/people_save_model_select",
+			type : "get",
+			data:"id="+document.getElementById("book_people_id_add").value,
+			success : function(result) {
+				if(result.code==100){
+					//添加员工名字和职位
+					console.log(result);
+					var item =result.extend.listPeopleInfo;
+					$("#people_name_model_span").text("姓名："+ item[0].peoEmployeeName);
+					$("#people_post_model_span").text("职位："+ item[0].peoPost);
+				}
+				else{
+					$("#book_people_id_addhelp-block").addClass("form-group has-error");
+					$("#people_name_model_span").text("查无此员工号!!");
+				}
+			}
+		});
+	});
+	/* 重置模态框数据 */
+	function reset_dailog(){
+		document.getElementById('book_room_add_select').innerHTML ="";
+		document.getElementById('book_date_add').innerHTML="";
+		//alert(sindexMin);	
+		document.getElementById('book_time_add').innerHTML="";
+		$("#people_name_model_span").text("");
+		$("#people_post_model_span").text("");
+		$("#book_people_id_addhelp-block").removeClass().addClass("form-group");
+		$("#people_name_model_span").text("");
+		document.getElementById("book_people_id_add").value="";
+		document.getElementById("book_theme_add").value="";
+		document.getElementById("book_other_add").value="";
+	}
+	
 	//根据房间名获得行索引
 	function getRolByRoomName(name) {
 		var j;
@@ -349,7 +546,7 @@
 	/* 比较两个时间字符串的大小 */
 	function bijiao(a,b) {
 	//	console.dir(b);
-	//	console.log("a:"+a+ "b:"+b);
+		console.log("a:"+a+ "b:"+b);
 		var bbb = b.split(":");
 		var bs=parseInt(bbb[0]);
 		var as=parseInt(a.split(":")[0]);
@@ -391,202 +588,6 @@
 			index+=1;
 		}
 		return index;
-	}
-	/* 点击方块事件处理 */
-	$(document).on("click","#table_btn",function () {
-		//所点击方块的列索引号
-		var index=$(this).attr("index");
-		
-		console.log("索引号："+index);
-		//判断为原始的未选择的方块
-		if($(this).attr("class")=="btn btn-primary btn-lg"){
-			var time = ColIndexToTime(index);
-			console.log("time:"+time);
-			//获得行房间名
-			var name=$(this).parent().siblings()[0].innerHTML;
-			//第一次选择？
-			if(pre_room_name=="m"){
-				pre_room_name=name;
-				pre_time.push(time);
-				pre_time.push(addHalfhear(time));
-				//alert(pre_time[0]);
-				$(this).removeClass().addClass("btn btn-warning btn-lg");
-			}else{
-				//第二次以上的选择是同一行？
-				if(pre_room_name==name){
-					var flagdd=0;
-					var i=0;
-					var nowTempTime=addHalfhear(time);
-					var max =getTimeMax();
-					console.log("++++++++++++++++"+time+getTimeMin());
-					if(bijiao(nowTempTime,max)==1){
-						var flagdd=1;
-						console.log("a1");
-						if(bijiao(nowTempTime,addHalfhear(getTimeMax()))==0){
-							console.log("a1a");
-							pre_time.push(nowTempTime);
-							$(this).addClass("btn btn-warning ");
-							}else{
-								console.log("a1b");
-								alert("不允许中间隔着选择a");
-						}
-					}
-						else if(bijiao(time,getTimeMin())==-1){
-							flagdd=1;
-							console.log("a2");
-							if(bijiao(addHalfhear(time),getTimeMin())==0){
-								console.log("a2a");
-								pre_time.push(time);	
-								$(this).addClass("btn btn-warning");
-							}else{
-								console.log("a2b");
-								alert("不允许中间隔着选择b");
-							}	
-						}
-						
-							console.log("a3");
-							/* 取消选择 */
-							if(flagdd==0){
-								
-							}
-									
-			
-								}
-				
-					else{
-						alert("不允许跨会议室选择，请取消已选择或者提交！");
-					}
-			}}else{
-				if(pre_time.length>2){
-					console.log("a3a");
-					if(bijiao(addHalfhear(time),getTimeMax())==0){
-						console.log("a3aa");
-						pre_time.pop();
-						$(this).removeClass().addClass("btn btn-primary btn-lg");
-					}
-					else if(bijiao(time,getTimeMin())==0){
-						console.log("a3ab");
-						pre_time.shift();
-						$(this).removeClass().addClass("btn btn-primary btn-lg");
-					}
-				}else{
-					console.log("a3b");
-					if(bijiao(time,getTimeMin())==0){
-						pre_time=[];
-						pre_room_name="m";
-						$(this).removeClass().addClass("btn btn-primary btn-lg");
-					}
-				}
-			}
-		console.log(pre_time);
-	});
-	
-	$("#test").click(function () {
-		$("#bookAddModal").modal({
-			backdrop:"static"
-		});
-	});
-	/* 模态框里的保存 */
-	$("#submit").click(function () {
-		var i=0;
-		if(pre_time.length==0){
-			alert("您未选择任何时间");
-		}else{
-			var stime="";
-			
-			for(;i<pre_time.length;i++){
-				var index= (timeToIndex(pre_time[i]));
-				if(index<timeToIndex(pre_time[sindexMins])){
-					sindexMins=i;
-				}
-				if(index>timeToIndex(pre_time[sindexMaxs])){
-					sindexMaxs=i;
-				}
-			}
-			/* 提交打开确认模态框 */
-			alert(sindexMins+"-"+sindexMaxs);
-			$("#bookAddModal").modal({
-				backdrop:"static"
-			});
-			//重置模态框数据
-			reset_dailog();
-			document.getElementById('book_room_add_select').innerHTML ="当前拟选会议室：<label class='ontrol-label'>"+pre_room_name+"</label>";
-			document.getElementById('book_date_add').innerHTML="选择日期：<label class='ontrol-label'>"+date_id+"</label>";
-			//alert(sindexMin);	
-			document.getElementById('book_time_add').innerHTML="预定时间：<label class='ontrol-label'>"+pre_time[sindexMins]+"</label>"+"到<label class='ontrol-label'>"+pre_time[sindexMaxs]+"</label>";
-			
-			//stime = stime.subString(0,pre_time.length-1);
-			//alert("stime"+stime);
-		}
-		
-	});
-	//模态框里保存预定记录
-	$("#book_add_save_btn").click(function() {
-		//1、校验数据,,正则表达式
-		alert("DDD");
-		console.log("sindexMins"+sindexMins+"sindexMaxs"+sindexMaxs);	
-		var cons_input="prePeopleId="+document.getElementById("book_people_id_add").value+
-			"&preRoomNum="+encodeURI(pre_room_name)+"&preTheme="+encodeURI(document.getElementById("book_theme_add").value)
-			+"&preDay="+date_id+"&preStartTime="+encodeURI(pre_time[sindexMins])+
-			"&preEndTime="+encodeURI(pre_time[sindexMaxs])+"&other="+encodeURI(document.getElementById("book_other_add").value)
-			alert(cons_input);
-		//ajax保存	
-		$.ajax({
-			url : "${APP_PATH }/f/main/upBook/",
-			type : "post",	
-			data : cons_input,
-			success : function(result) {
-				if (result.code == 100) {
-					//保存成功之后，1、关闭模态框，2、跳到最后一页
-					$("#bookAddModal").modal('hide');
-					$("[index]").empty();
-					$("[index]").remove();
-					//还原暂存信息
-					pre_time=[];
-					pre_room_name="m";
-					init();
-				} else {
-					alert("保存失败！");
-				}
-			}
-		});
-	});
-	
-	//判断员工号是否存在
-	$("#book_people_id_add").blur(function() {
-		console.log("判断员工号");
-		$.ajax({
-			url : "${APP_PATH }/people_save_model_select",
-			type : "get",
-			data:"id="+document.getElementById("book_people_id_add").value,
-			success : function(result) {
-				if(result.code==100){
-					//添加员工名字和职位
-					console.log(result);
-					var item =result.extend.listPeopleInfo;
-					$("#people_name_model_span").text("姓名："+ item[0].peoEmployeeName);
-					$("#people_post_model_span").text("职位："+ item[0].peoPost);
-				}
-				else{
-					$("#book_people_id_addhelp-block").addClass("form-group has-error");
-					$("#people_name_model_span").text("查无此员工号!!");
-				}
-			}
-		});
-	});
-	/* 重置模态框数据 */
-	function reset_dailog(){
-		document.getElementById('book_room_add_select').innerHTML ="";
-		document.getElementById('book_date_add').innerHTML="";
-		//alert(sindexMin);	
-		document.getElementById('book_time_add').innerHTML="";
-		$("#people_name_model_span").text("");
-		$("#people_post_model_span").text("");
-		$("#book_people_id_addhelp-block").removeClass().addClass("form-group");
-		$("#people_name_model_span").text("");
-		document.getElementById("book_people_id_add").value="";
-		document.getElementById("book_theme_add").value="";
-		document.getElementById("book_other_add").value="";
 	}
 	// var data="";
 	/* $(function() {

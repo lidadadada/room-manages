@@ -1,6 +1,7 @@
 package com.atguigu.crud.services;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.BeanUtils;
@@ -10,9 +11,12 @@ import org.springframework.stereotype.Service;
 import com.atguigu.crud.bean.Book;
 import com.atguigu.crud.bean.BookExample;
 import com.atguigu.crud.bean.BookPo;
+import com.atguigu.crud.bean.PeopleInfo;
 import com.atguigu.crud.bean.BookExample.Criteria;
 import com.atguigu.crud.controller.BaseController;
 import com.atguigu.crud.dao.BookMapper;
+import com.atguigu.crud.utils.TextUtil;
+import com.atguigu.crud.utils.TimeUtil;
 
 /**
  * 处理关于预定的业务
@@ -21,21 +25,21 @@ import com.atguigu.crud.dao.BookMapper;
 public class BookService extends BaseService{
 	@Autowired
 	BookMapper bookMapper;
-	public List<BookPo> getAll(){
-		System.out.println("books+++++++++++++++++");
-		BookExample example = new BookExample();
-		Criteria criteria = example.createCriteria();
-		criteria.andPrePeopleIdEqualTo(1);
-		List<Book> list = bookMapper.selectByExampleWithPeople(example);
-		
-		List<BookPo> bookPos = new ArrayList<BookPo>();
+	@Autowired
+	PeopleService peopleService;
+	public List<Book> getAll(){
+		BookExample bookExample = new BookExample();
+		bookExample.setOrderByClause("pre_day desc");
+		List<Book> list = bookMapper.selectByExample(bookExample);
+		System.out.println("BookService:"+list.size());
+		/*List<BookPo> bookPos = new ArrayList<BookPo>();
 		BookPo bookPo=null;
 		for (Book book : list) {
 			bookPo = new BookPo();
 			BeanUtils.copyProperties(book, bookPo);
 			bookPos.add(bookPo);
-		}
-		return bookPos;
+		}*/
+		return list;
 		
 	}
 	public void saveBook(Book book) {
@@ -84,5 +88,52 @@ public class BookService extends BaseService{
 		}
 		update(book);
 		getLog(this.getClass()).info("book表prejion人数+1");
+	}
+	/**
+	 * 参与会议人数-1
+	 */
+	public void subPeoNum(Integer booknum) {
+		Book book = bookMapper.selectByPrimaryKey(booknum);
+		Integer jion = book.getPreJion();
+		if(jion>0) {
+			book.setPreJion(jion-1);
+			update(book);
+		}else {
+			getLog(this.getClass()).info("book表prejion人数为负");
+		}
+		getLog(this.getClass()).info("book表prejion人数+1");
+	}
+	/**
+	 * 处理页面多条件搜索
+	 * @param data
+	 * @return
+	 */
+	public List<Book> search(String data) {
+		String[] split = data.split("_");
+		for (String string : split) {
+			getLog(this.getClass()).info(string);
+		}
+		BookExample bookExample = new BookExample();
+		bookExample.setOrderByClause("pre_day desc");
+		Criteria createCriteria = bookExample.createCriteria();
+		if(!TextUtil.isEmpty(split[0])) {
+			createCriteria.andPreThemeLike("%"+split[0]+"%");
+		}
+		if(!TextUtil.isEmpty(split[1])) {
+			Date date = TimeUtil.stringToDate(split[1]+" 00:00:00", "yyyy-MM-dd HH:mm:ss");
+			createCriteria.andPreDayEqualTo(date);
+		}
+		if(!TextUtil.isEmpty(split[2])) {
+			List<PeopleInfo> list = peopleService.selectByPrimaryEmployeeName(split[2]);
+			ArrayList<Integer> arrayList = new ArrayList<Integer>();
+			for (PeopleInfo peopleInfo : list) {
+				arrayList.add(peopleInfo.getPeoEmployeeId());
+			}
+			createCriteria.andPrePeopleIdIn(arrayList);
+		}
+		if(!TextUtil.isEmpty(split[3])) {
+			createCriteria.andPreRoomNumLike("%"+split[2]+"%");
+		}
+		return bookMapper.selectByExample(bookExample);
 	}
 }

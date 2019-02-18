@@ -34,7 +34,9 @@ public class PeopleService {
 	 * @return
 	 */
 	public List<PeopleInfo> getAll() {
-		return peopleInfoMapper.selectByExample(null);
+		List<PeopleInfo> selectByExample = peopleInfoMapper.selectByExample(null);
+		System.out.println("selectByExample:"+selectByExample.size());
+		return selectByExample;
 	}
 	/**
 	 * 根据主键/序号查询
@@ -87,9 +89,28 @@ public class PeopleService {
 	public List<PeopleInfo> selectByPrimaryEmployeeName(String user) {
 		PeopleInfoExample example = new PeopleInfoExample();
 		com.atguigu.crud.bean.PeopleInfoExample.Criteria criteria = example.createCriteria();
-		criteria.andPeoEmployeeNameEqualTo(user);
+		criteria.andPeoEmployeeNameLike("%"+user+"%");
 		List<PeopleInfo> list = peopleInfoMapper.selectByExample(example);
 		return list;
+	}
+	/**
+	 * 插入员工
+	 * @param peopleInfo
+	 */
+	public void insertEmployeeSerlactive(PeopleInfo peopleInfo) {
+		peopleInfoMapper.insertSelective(peopleInfo);
+		
+	}
+	/**
+	 * 根据电话
+	 * @param phone
+	 * @return
+	 */
+	public List<PeopleInfo> selectByPrimaryEmployeephone(String phone) {
+		PeopleInfoExample example = new PeopleInfoExample();
+		com.atguigu.crud.bean.PeopleInfoExample.Criteria criteria = example.createCriteria();
+		criteria.andPeoPhoneEqualTo(phone);
+		return peopleInfoMapper.selectByExample(example);
 	}
 
 }
