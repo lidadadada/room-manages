@@ -1,0 +1,246 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.atguigu.crud.dao.PlyMapper">
+  <resultMap id="BaseResultMap" type="com.atguigu.crud.bean.Ply">
+    <id column="ply_id" jdbcType="INTEGER" property="plyId" />
+    <result column="ply_peo_id" jdbcType="INTEGER" property="plyPeoId" />
+    <result column="ply_peo_name" jdbcType="VARCHAR" property="plyPeoName" />
+    <result column="ply_peo_picture_path" jdbcType="VARCHAR" property="plyPeoPicturePath" />
+    <result column="ply_book_num" jdbcType="INTEGER" property="plyBookNum" />
+    <result column="ply_time" jdbcType="TIMESTAMP" property="plyTime" />
+    <result column="ply_message" jdbcType="VARCHAR" property="plyMessage" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    ply_id, ply_peo_id, ply_peo_name, ply_peo_picture_path, ply_book_num, ply_time, ply_message
+  </sql>
+  <select id="selectByExample" parameterType="com.atguigu.crud.bean.PlyExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from ply
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from ply
+    where ply_id = #{plyId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from ply
+    where ply_id = #{plyId,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.atguigu.crud.bean.PlyExample">
+    delete from ply
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.atguigu.crud.bean.Ply">
+    insert into ply (ply_id, ply_peo_id, ply_peo_name, 
+      ply_peo_picture_path, ply_book_num, ply_time, 
+      ply_message)
+    values (#{plyId,jdbcType=INTEGER}, #{plyPeoId,jdbcType=INTEGER}, #{plyPeoName,jdbcType=VARCHAR}, 
+      #{plyPeoPicturePath,jdbcType=VARCHAR}, #{plyBookNum,jdbcType=INTEGER}, #{plyTime,jdbcType=TIMESTAMP}, 
+      #{plyMessage,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.atguigu.crud.bean.Ply">
+ 	 <selectKey resultType="java.lang.Integer" keyProperty="plyId" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into ply
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="plyId != null">
+        ply_id,
+      </if>
+      <if test="plyPeoId != null">
+        ply_peo_id,
+      </if>
+      <if test="plyPeoName != null">
+        ply_peo_name,
+      </if>
+      <if test="plyPeoPicturePath != null">
+        ply_peo_picture_path,
+      </if>
+      <if test="plyBookNum != null">
+        ply_book_num,
+      </if>
+      <if test="plyTime != null">
+        ply_time,
+      </if>
+      <if test="plyMessage != null">
+        ply_message,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="plyId != null">
+        #{plyId,jdbcType=INTEGER},
+      </if>
+      <if test="plyPeoId != null">
+        #{plyPeoId,jdbcType=INTEGER},
+      </if>
+      <if test="plyPeoName != null">
+        #{plyPeoName,jdbcType=VARCHAR},
+      </if>
+      <if test="plyPeoPicturePath != null">
+        #{plyPeoPicturePath,jdbcType=VARCHAR},
+      </if>
+      <if test="plyBookNum != null">
+        #{plyBookNum,jdbcType=INTEGER},
+      </if>
+      <if test="plyTime != null">
+        #{plyTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="plyMessage != null">
+        #{plyMessage,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.atguigu.crud.bean.PlyExample" resultType="java.lang.Long">
+    select count(*) from ply
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update ply
+    <set>
+      <if test="record.plyId != null">
+        ply_id = #{record.plyId,jdbcType=INTEGER},
+      </if>
+      <if test="record.plyPeoId != null">
+        ply_peo_id = #{record.plyPeoId,jdbcType=INTEGER},
+      </if>
+      <if test="record.plyPeoName != null">
+        ply_peo_name = #{record.plyPeoName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.plyPeoPicturePath != null">
+        ply_peo_picture_path = #{record.plyPeoPicturePath,jdbcType=VARCHAR},
+      </if>
+      <if test="record.plyBookNum != null">
+        ply_book_num = #{record.plyBookNum,jdbcType=INTEGER},
+      </if>
+      <if test="record.plyTime != null">
+        ply_time = #{record.plyTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.plyMessage != null">
+        ply_message = #{record.plyMessage,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update ply
+    set ply_id = #{record.plyId,jdbcType=INTEGER},
+      ply_peo_id = #{record.plyPeoId,jdbcType=INTEGER},
+      ply_peo_name = #{record.plyPeoName,jdbcType=VARCHAR},
+      ply_peo_picture_path = #{record.plyPeoPicturePath,jdbcType=VARCHAR},
+      ply_book_num = #{record.plyBookNum,jdbcType=INTEGER},
+      ply_time = #{record.plyTime,jdbcType=TIMESTAMP},
+      ply_message = #{record.plyMessage,jdbcType=VARCHAR}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.atguigu.crud.bean.Ply">
+    update ply
+    <set>
+      <if test="plyPeoId != null">
+        ply_peo_id = #{plyPeoId,jdbcType=INTEGER},
+      </if>
+      <if test="plyPeoName != null">
+        ply_peo_name = #{plyPeoName,jdbcType=VARCHAR},
+      </if>
+      <if test="plyPeoPicturePath != null">
+        ply_peo_picture_path = #{plyPeoPicturePath,jdbcType=VARCHAR},
+      </if>
+      <if test="plyBookNum != null">
+        ply_book_num = #{plyBookNum,jdbcType=INTEGER},
+      </if>
+      <if test="plyTime != null">
+        ply_time = #{plyTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="plyMessage != null">
+        ply_message = #{plyMessage,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where ply_id = #{plyId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.atguigu.crud.bean.Ply">
+    update ply
+    set ply_peo_id = #{plyPeoId,jdbcType=INTEGER},
+      ply_peo_name = #{plyPeoName,jdbcType=VARCHAR},
+      ply_peo_picture_path = #{plyPeoPicturePath,jdbcType=VARCHAR},
+      ply_book_num = #{plyBookNum,jdbcType=INTEGER},
+      ply_time = #{plyTime,jdbcType=TIMESTAMP},
+      ply_message = #{plyMessage,jdbcType=VARCHAR}
+    where ply_id = #{plyId,jdbcType=INTEGER}
+  </update>
+</mapper>

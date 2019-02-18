@@ -1,0 +1,11 @@
+﻿body, ul, ol, li, p, h1, h2, h3, h4, h5, h6, form, fieldset, img, div, dl, dt, dd, blockquote{ border:none 0; }
+table,td{margin:auto;padding:inherit;}
+body, ul, ol, li, p, h1, h2, h3, h4, h5, h6, form, fieldset, img, div, dl, dt, dd, blockquote{ border:none 0; }
+
+li{
+	display: list-item;
+	width: 100%;
+}
+#list{
+	float: left;
+}
