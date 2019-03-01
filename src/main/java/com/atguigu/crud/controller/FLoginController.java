@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.atguigu.crud.bean.Msg;
 import com.atguigu.crud.bean.PeopleInfo;
 import com.atguigu.crud.services.PeopleService;
+import com.atguigu.crud.utils.Md5Util;
 
 @Controller
 public class FLoginController extends BaseController {
@@ -43,7 +44,7 @@ public class FLoginController extends BaseController {
 				}
 				if (list.size() > 0) {
 					PeopleInfo peopleInfo = list.get(0);
-					if (peopleInfo != null && peopleInfo.getPeoPassword().equals(split[1])) {
+					if (peopleInfo != null && peopleInfo.getPeoPassword().equals(Md5Util.MD5(split[1]))) {
 						request.getSession().setAttribute("currentUser", peopleInfo);
 						// System.out.println("登陆");
 						return Msg.success().add("path", "/f_main.jsp");

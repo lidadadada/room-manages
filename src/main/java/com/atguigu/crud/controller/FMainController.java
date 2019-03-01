@@ -1,5 +1,10 @@
 package com.atguigu.crud.controller;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -20,14 +25,16 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.atguigu.crud.bean.Book;
-import com.atguigu.crud.bean.BookInput;
 import com.atguigu.crud.bean.Msg;
 import com.atguigu.crud.bean.PeopleInfo;
 import com.atguigu.crud.bean.RoomInfo;
+import com.atguigu.crud.common.FTPConfig;
+import com.atguigu.crud.common.UserConfig;
+import com.atguigu.crud.po.BookPo;
 import com.atguigu.crud.services.BookService;
 import com.atguigu.crud.services.FMainService;
-import com.atguigu.crud.services.PeopleService;
 import com.atguigu.crud.services.RoomService;
+import com.atguigu.crud.utils.FTPUtil;
 import com.atguigu.crud.utils.MemberUtil;
 import com.atguigu.crud.utils.TimeUtil;
 
@@ -96,21 +103,41 @@ public class FMainController extends BaseController {
 	 */
 	@RequestMapping(value = "/f/main/upBook/", method = RequestMethod.POST)
 	@ResponseBody
-	public Msg delBook(@Valid BookInput book, BindingResult result, HttpServletRequest request) {
+	public Msg delBook(@Valid BookPo book,HttpServletRequest request) {
+		getLog(this.getClass()).info("##################保存订单::接收数据：："+book.getPreDay());
+		
 		getLog(this.getClass()).info("保存订单::接收数据：："+book.toString());
 		PeopleInfo peopleInfo = (PeopleInfo) request.getSession().getAttribute("currentUser");
 		if (peopleInfo != null) {
 			// @Valid申明在封装的时候需要校验 BindingResult封装娇艳的结果
-			if (result.hasErrors()) {
-				// 校验失败	
-				getLog(this.getClass()).info("预定数据校验失败");
-				List<FieldError> errors = result.getFieldErrors();
-				Map<String, Object> map = new HashMap<String, Object>();
-				for (FieldError error : errors) {
-					map.put(error.getField(), error.getDefaultMessage());
-				}
-				return Msg.fail().add("errorFieled", map);
-			} else {
+				FTPUtil ftpUtil = new FTPUtil();
+				String tablePath = MemberUtil.createNameTable(book.getPrePeopleId()+UUID.randomUUID().toString().substring(0, 5), book.getPreDay());
+				String basePath = tablePath.split("/")[0]+"/"+tablePath.split("/")[1]+"/files";
+				ftpUtil.mkDir(basePath);
+				String filename = UUID.randomUUID().toString().substring(0, 5);
+				System.out.println(book.getBookImage().isEmpty());
+				if(!book.getBookImage().isEmpty()) {
+					try {
+						filename = filename+"."+book.getImagePrefix();
+						System.out.println(filename+"-----------------------");
+						ftpUtil.upload(book.getBookImage().getInputStream(),FTPConfig.bookImagePath+ filename);
+					} catch (IOException e) {
+						// TODO 自动生成的 catch 块
+						e.printStackTrace();
+					}
+					
+				}else {
+					try {
+						filename = filename+".png";
+						System.out.println(filename+"---------++++++++++++++++++");
+						String defaultImagePath = this.getClass().getClassLoader().getResource("defaultImage/bookDefaultImage.png").getPath();
+						FileInputStream fileInputStream = new FileInputStream(new File(defaultImagePath));
+						ftpUtil.upload(fileInputStream, FTPConfig.bookImagePath+"/"+filename);
+					} catch (FileNotFoundException e) {
+						// TODO 自动生成的 catch 块
+						e.printStackTrace();
+					}
+				ftpUtil.close();
 				// bookinput转换为book，并保存
 				getLog(this.getClass()).info("开始保存预定数据");
 				Book books = new Book();
@@ -119,22 +146,21 @@ public class FMainController extends BaseController {
 				books.setPreRoomNum(book.getPreRoomNum());
 				books.setPreTheme(book.getPreTheme());
 				books.setPreJion(1);
-				books.setPreDay(TimeUtil.stringToDate(book.getPreDay()+" 00:00:00", "yyyy-MM-dd HH:mm:ss"));
+				books.setPreDay(TimeUtil.stringToDate(book.getPreDay(), "yyyy-MM-dd HH:mm:ss"));
 				books.setPreStartTime(TimeUtil.stringToDate(book.getPreStartTime(), "HH:mm:ss"));
 				books.setPreEndTime(TimeUtil.stringToDate(book.getPreEndTime(), "HH:mm:ss"));
 				books.setOther(book.getOther());
 				getLog(this.getClass()).info("进入createNameTable");
-				String table = MemberUtil.createNameTable(peopleInfo.getPeoEmployeeId()+UUID.randomUUID().toString().substring(0, 5), book.getPreDay());
-				MemberUtil.jionMemeber(table, peopleInfo.getPeoEmployeeId(),books.getSerialNum());
-				books.setPreMemberPath(table);
+				MemberUtil.jionMemeber(tablePath, book.getPrePeopleId());
+				books.setPreMemberPath(tablePath);
+				books.setPrePicturePath(UserConfig.bookImageLocalMappingBasePath+filename);
 				getLog(this.getClass()).info("保存订单::"+books.toString());
 				bookService.saveBook(books);
 				return Msg.success();
 			}
 		} else {
 			getLog(this.getClass()).info(peopleInfo.getPeoAddress() + "session中没有peopleInfo用户信息数据");
-			return Msg.fail().add("path", "/f_login.jsp");
 		}
+		return Msg.fail().add("path", "/f_login.jsp");
 	}
-
 }

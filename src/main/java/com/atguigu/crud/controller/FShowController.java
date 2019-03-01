@@ -1,19 +1,20 @@
 package com.atguigu.crud.controller;
 
+import java.io.BufferedOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
-import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.eclipse.jdt.internal.compiler.lookup.InferenceContext;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -23,7 +24,6 @@ import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
 import com.atguigu.crud.bean.Book;
 import com.atguigu.crud.bean.BookFile;
-import com.atguigu.crud.bean.BookPo;
 import com.atguigu.crud.bean.JoinApply;
 import com.atguigu.crud.bean.Msg;
 import com.atguigu.crud.bean.PeopleInfo;
@@ -37,6 +37,7 @@ import com.atguigu.crud.services.PlyService;
 import com.atguigu.crud.services.ReplyService;
 import com.atguigu.crud.utils.FTPUtil;
 import com.atguigu.crud.utils.MemberUtil;
+import com.atguigu.crud.utils.PeopleJoinUtil;
 import com.atguigu.crud.utils.TextUtil;
 import com.atguigu.crud.utils.TimeUtil;
 import com.github.pagehelper.PageHelper;
@@ -65,6 +66,40 @@ public class FShowController extends BaseController {
 	@Autowired
 	JoinApplyService joinApplyService;
 
+	/**
+	 * 搜索我所参加的会议处理
+	 * 
+	 * @param path
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping("/f/show/myjoin")
+	@ResponseBody
+	public Msg myJoin(@RequestParam(value = "mydata", defaultValue = "") Integer data, HttpServletRequest request) {
+		PeopleInfo peopleInfo =(PeopleInfo) request.getSession().getAttribute("currentUser");
+		PageHelper.startPage(data, 10); // 后面跟着的查询，就自动分页查询了
+		ArrayList<ArrayList<Integer>> list = PeopleJoinUtil.getAllJoin(peopleInfo.getPeoEmployeeId());
+		int[] isIn = new int[10];
+		int i = 0;
+		for (; i < isIn.length; i++) {
+			isIn[i] = 0;
+		}
+		i=0;
+		List<Book> lists = bookService.searchMyJoin(list.get(0));
+		for (Book book : lists) {
+			book.setApplyState(list.get(1).get(i));
+			List<PeopleInfo> sEmployee = peopleService.selectByPrimaryEmployeeId(book.getPrePeopleId());
+			getLog(this.getClass()).info("预定者姓名：" + sEmployee.get(0).getPeoEmployeeName());
+			book.setPeopleInfo(sEmployee.get(0));
+			i++;
+		}
+		PageInfo pageInfo = new PageInfo(lists, 5);
+		getLog(this.getClass()).info("搜索会议成功");
+		return Msg.success().add("pageInfo", pageInfo).add("isIn", isIn);
+		
+	}
+	
 	/**
 	 * 搜索会议处理
 	 * 
@@ -95,9 +130,7 @@ public class FShowController extends BaseController {
 			}
 			i = 0;
 
-			for (Book book : lists) {
-				getLog(this.getClass()).info("获得预定数据:" + book.getPreTheme());
-			}
+			
 			for (Book book : lists) {
 				String path = book.getPreMemberPath();
 				// 判断当前id是否已加入到会议成员中
@@ -117,8 +150,10 @@ public class FShowController extends BaseController {
 				} else {
 					isIn[i] = 0;
 				}
-				i++;
-				
+				i++;	
+			}
+			for (Book book : lists) {
+				getLog(this.getClass()).info("获得预定数据:" + book.getPreTheme());
 			}
 			PageInfo pageInfo = new PageInfo(lists, 5);
 			getLog(this.getClass()).info("搜索会议成功");
@@ -144,6 +179,7 @@ public class FShowController extends BaseController {
 			Integer employeeId = peopleInfo.getPeoEmployeeId();
 			Book book = bookService.selectByPrimaryKey(Integer.parseInt(data));
 			if (MemberUtil.memeberExit(book.getPreMemberPath(), employeeId)) {
+				PeopleJoinUtil.fixMeeting(peopleInfo.getPeoEmployeeId(), book.getSerialNum(), 3);
 				bookService.subPeoNum(Integer.parseInt(data));
 				return Msg.success();
 			}
@@ -163,17 +199,23 @@ public class FShowController extends BaseController {
 	@RequestMapping("/f/show/join")
 	@ResponseBody
 	public Msg join(@RequestParam(value = "join_data", defaultValue = "") String data, HttpServletRequest request) {
+		String[] split = data.split("_");
 		getLog(this.getClass()).info("请求加入会议,获得数据" + data);
 		PeopleInfo peopleInfo = (PeopleInfo) request.getSession().getAttribute("currentUser");
 		if (peopleInfo != null) {
 			JoinApply joinApply = new JoinApply();
-			joinApply.setJoinBookId(Integer.parseInt(data));
+			joinApply.setJoinBookId(Integer.parseInt(split[split.length-1]));
 			joinApply.setJoinPeopleId(peopleInfo.getPeoEmployeeId());
-			joinApply.setJoinOther("");
+			if(split.length>1) {
+				joinApply.setJoinOther(split[0]);
+			}else {
+				joinApply.setJoinOther("");
+			}
 			joinApply.setJoinDealState(1);
-			Book book = bookService.selectByPrimaryKey(Integer.parseInt(data));
+			Book book = bookService.selectByPrimaryKey(Integer.parseInt(split[split.length-1]));
 			joinApply.setJoinBookOwnerId(book.getPrePeopleId());
 			joinApplyService.insertByid(joinApply);
+			PeopleJoinUtil.joinMeeting(peopleInfo.getPeoEmployeeId(), joinApply.getJoinBookId(),1);
 			return Msg.success();
 		}
 		return Msg.fail();
@@ -184,29 +226,33 @@ public class FShowController extends BaseController {
 	 */
 	@RequestMapping(value = "/f/show/down",method = RequestMethod.POST)
 	@ResponseBody
-	public void downFile(@RequestParam(value = "path", defaultValue = "") String path, HttpServletRequest request,
+	public void downFile(@RequestParam(value = "filePath", defaultValue = "") String path, HttpServletRequest request,
 			HttpServletResponse response) {
 		FTPUtil ftpUtil = new FTPUtil();
 		getLog(this.getClass()).info("downFile开始会议文件下载");
 		getLog(this.getClass()).info("path" + path);
-		String[] split = path.split("_");
-		path = split[0] + "/" + split[1] + "/" + split[2] + "/" + split[3];
+		String[] split = path.split("/");
+		/*path = split[0] + "/" + split[1] + "/" + split[2] + "/" + split[3];*/
 		getLog(this.getClass()).info("path" + path);
 		try {
+			String name = bookFileService.selectTitleByPath(path);
+			String filename = URLEncoder.encode(name,"UTF-8");
 			response.setCharacterEncoding("UTF-8");
 			// 文件下载头
-			response.addHeader("content-disposition", "attachment;filename=" + split[3]);
+			 response.addHeader("Content-Disposition", "attachment;filename=" + filename);
 			// 文件类型
-			response.setContentType("multipart/form-data;charset=UTF-8");
+			 response.setContentType("multipart/form-data");
 			// FileUtils.copyFile(file, response.getOutputStream());
-			 OutputStream outputStream = response.getOutputStream();
-			boolean b = ftpUtil.retrieveFileToWeb(outputStream, path);
+			 BufferedOutputStream out = new BufferedOutputStream(response.getOutputStream()); 
+			boolean b = ftpUtil.retrieveFileToWeb(out, path);
 			if (b) {
 				getLog(this.getClass()).info("会议文件下载成功");
 			}
 		} catch (Exception e) {
 			getLog(this.getClass()).info("会议文件下载异常");
 			e.printStackTrace();
+		}finally {
+			ftpUtil.close();
 		}
 
 	}
@@ -274,18 +320,23 @@ public class FShowController extends BaseController {
 			} else {
 				tempname = fileName;
 			}
+			String savepath = path+UUID.randomUUID().toString().substring(0, 5)+subfux;
 			// 保存
 			InputStream inputStream = partFile.getInputStream();
-			boolean upload = ftpUtil.upload(inputStream, path + tempname);
+			boolean upload = ftpUtil.upload(inputStream, savepath);
 			if (upload) {
 				// 插入会议文件数据记录
 				BookFile bookFile = new BookFile();
-				bookFile.setFileSavaPath(path + tempname);
+				bookFile.setFileSavaPath(savepath);
 				bookFile.setFileBookId(Integer.parseInt(split[1]));
 				bookFile.setFileTitle(tempname);
-				if(!TextUtil.isEmpty(split[2])) {
-					bookFile.setFileOther(split[2]);
-				}else {
+				if(split.length>2)
+				{
+					if(!TextUtil.isEmpty(split[2])) {
+						bookFile.setFileOther(split[2]);
+					}
+				}
+				else {
 					bookFile.setFileOther("");
 				}
 				
@@ -328,10 +379,6 @@ public class FShowController extends BaseController {
 				isIn[i] = 0;
 			}
 			i = 0;
-
-			for (Book book : lists) {
-				getLog(this.getClass()).info("获得预定数据:" + book.getPreTheme());
-			}
 			for (Book book : lists) {
 				String path = book.getPreMemberPath();
 				// 判断当前id是否已加入到会议成员中

@@ -3,6 +3,7 @@
 <mapper namespace="com.atguigu.crud.dao.UnEmpidMapper">
   <resultMap id="BaseResultMap" type="com.atguigu.crud.bean.UnEmpid">
     <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="use_state" jdbcType="INTEGER" property="useState" />
     <result column="emp_id" jdbcType="INTEGER" property="empId" />
   </resultMap>
   <sql id="Example_Where_Clause">
@@ -64,7 +65,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, emp_id
+    id, use_state, emp_id
   </sql>
   <select id="selectByExample" parameterType="com.atguigu.crud.bean.UnEmpidExample" resultMap="BaseResultMap">
     select
@@ -97,14 +98,19 @@
     </if>
   </delete>
   <insert id="insert" parameterType="com.atguigu.crud.bean.UnEmpid">
-    insert into un_emp_id (id, emp_id)
-    values (#{id,jdbcType=INTEGER}, #{empId,jdbcType=INTEGER})
+    insert into un_emp_id (id, use_state, emp_id
+      )
+    values (#{id,jdbcType=INTEGER}, #{useState,jdbcType=INTEGER}, #{empId,jdbcType=INTEGER}
+      )
   </insert>
   <insert id="insertSelective" parameterType="com.atguigu.crud.bean.UnEmpid">
     insert into un_emp_id
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">
         id,
+      </if>
+      <if test="useState != null">
+        use_state,
       </if>
       <if test="empId != null">
         emp_id,
@@ -113,6 +119,9 @@
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
         #{id,jdbcType=INTEGER},
+      </if>
+      <if test="useState != null">
+        #{useState,jdbcType=INTEGER},
       </if>
       <if test="empId != null">
         #{empId,jdbcType=INTEGER},
@@ -131,6 +140,9 @@
       <if test="record.id != null">
         id = #{record.id,jdbcType=INTEGER},
       </if>
+      <if test="record.useState != null">
+        use_state = #{record.useState,jdbcType=INTEGER},
+      </if>
       <if test="record.empId != null">
         emp_id = #{record.empId,jdbcType=INTEGER},
       </if>
@@ -142,6 +154,7 @@
   <update id="updateByExample" parameterType="map">
     update un_emp_id
     set id = #{record.id,jdbcType=INTEGER},
+      use_state = #{record.useState,jdbcType=INTEGER},
       emp_id = #{record.empId,jdbcType=INTEGER}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
@@ -150,6 +163,9 @@
   <update id="updateByPrimaryKeySelective" parameterType="com.atguigu.crud.bean.UnEmpid">
     update un_emp_id
     <set>
+      <if test="useState != null">
+        use_state = #{useState,jdbcType=INTEGER},
+      </if>
       <if test="empId != null">
         emp_id = #{empId,jdbcType=INTEGER},
       </if>
@@ -158,7 +174,8 @@
   </update>
   <update id="updateByPrimaryKey" parameterType="com.atguigu.crud.bean.UnEmpid">
     update un_emp_id
-    set emp_id = #{empId,jdbcType=INTEGER}
+    set use_state = #{useState,jdbcType=INTEGER},
+      emp_id = #{empId,jdbcType=INTEGER}
     where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>

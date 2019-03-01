@@ -164,6 +164,66 @@ public class UnEmpidExample {
             return (Criteria) this;
         }
 
+        public Criteria andUseStateIsNull() {
+            addCriterion("use_state is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andUseStateIsNotNull() {
+            addCriterion("use_state is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andUseStateEqualTo(Integer value) {
+            addCriterion("use_state =", value, "useState");
+            return (Criteria) this;
+        }
+
+        public Criteria andUseStateNotEqualTo(Integer value) {
+            addCriterion("use_state <>", value, "useState");
+            return (Criteria) this;
+        }
+
+        public Criteria andUseStateGreaterThan(Integer value) {
+            addCriterion("use_state >", value, "useState");
+            return (Criteria) this;
+        }
+
+        public Criteria andUseStateGreaterThanOrEqualTo(Integer value) {
+            addCriterion("use_state >=", value, "useState");
+            return (Criteria) this;
+        }
+
+        public Criteria andUseStateLessThan(Integer value) {
+            addCriterion("use_state <", value, "useState");
+            return (Criteria) this;
+        }
+
+        public Criteria andUseStateLessThanOrEqualTo(Integer value) {
+            addCriterion("use_state <=", value, "useState");
+            return (Criteria) this;
+        }
+
+        public Criteria andUseStateIn(List<Integer> values) {
+            addCriterion("use_state in", values, "useState");
+            return (Criteria) this;
+        }
+
+        public Criteria andUseStateNotIn(List<Integer> values) {
+            addCriterion("use_state not in", values, "useState");
+            return (Criteria) this;
+        }
+
+        public Criteria andUseStateBetween(Integer value1, Integer value2) {
+            addCriterion("use_state between", value1, value2, "useState");
+            return (Criteria) this;
+        }
+
+        public Criteria andUseStateNotBetween(Integer value1, Integer value2) {
+            addCriterion("use_state not between", value1, value2, "useState");
+            return (Criteria) this;
+        }
+
         public Criteria andEmpIdIsNull() {
             addCriterion("emp_id is null");
             return (Criteria) this;

@@ -39,4 +39,71 @@ public class JoinApplyService extends BaseService{
 		}
 		return 0;
 	}
+	/**
+	 * 通过预定序列号查询
+	 * @param serialNum
+	 * @param peoEmployeeId
+	 * @return
+	 */
+	public JoinApply selectByBookId(int serialNum, int peoEmployeeId) {
+		getLog(this.getClass()).info("selectByBookIdAndEmpId:num:"+serialNum+":::empid:"+peoEmployeeId);
+		JoinApplyExample joinApplyExample = new JoinApplyExample();
+		Criteria createCriteria = joinApplyExample.createCriteria();
+		createCriteria.andJoinBookIdEqualTo(serialNum);
+		createCriteria.andJoinPeopleIdEqualTo(peoEmployeeId);
+		List<JoinApply> list = joinApplyMapper.selectByExample(joinApplyExample);
+		if(list!=null&&list.size()>0) {
+			return list.get(0);
+		}
+		return null;
+	}
+	/**
+	 * 通过创建会议的负责人id查询列表
+	 * @param peoEmployeeId
+	 * @return 
+	 */
+	public List<JoinApply> selectByOwerId(Integer peoEmployeeId) {
+		JoinApplyExample joinApplyExample = new JoinApplyExample();
+		Criteria createCriteria = joinApplyExample.createCriteria();
+		createCriteria.andJoinBookOwnerIdEqualTo(peoEmployeeId);
+		return  joinApplyMapper.selectByExample(joinApplyExample);
+		
+	}
+	/**
+	 * 更新申请状态
+	 * @param id
+	 * @return 
+	 */
+	
+	public boolean updateApplyState( Integer id,int stateCode) {
+		JoinApply apply = joinApplyMapper.selectByPrimaryKey(id);
+		if(apply!=null) {
+			apply.setJoinDealState(stateCode);			
+			joinApplyMapper.updateByPrimaryKey(apply);
+			return true;
+		}
+		return false;
+	}
+	
+	/**
+	 * 根据主键查询 
+	 * @param joinId
+	 * @return
+	 */
+	public JoinApply selectByPrimaryKey(int joinId) {
+		return  joinApplyMapper.selectByPrimaryKey(joinId);
+	}
+	/**
+	 * 根据预定号修改
+	 * @param preRoomNum
+	 * @param applyJoinDisboard
+	 */
+	public void updateApplyStateByBookid(Integer seriaNum, int stateCode) {
+		JoinApplyExample joinApplyExample = new JoinApplyExample();
+		Criteria createCriteria = joinApplyExample.createCriteria();
+		createCriteria.andJoinBookIdEqualTo(seriaNum);
+		JoinApply joinApply2 = new JoinApply();
+		joinApply2.setJoinDealState(stateCode);
+		joinApplyMapper.updateByExampleSelective(joinApply2, joinApplyExample);
+	}
 }

@@ -137,7 +137,7 @@
 		        document.getElementById("image-code").onblur = function(){
 		            var res = verifyCode.validate(document.getElementById("image-code").value);
 		            if(res){
-		                alert("验证正确");
+		                //alert("验证正确");
 		            }else{
 		                alert("验证码错误");
 		            }
@@ -171,8 +171,8 @@
 						url:"${APP_PATH }/f/reg/regdata",
 						data:$("form").serialize(),
 						success:function(result){
-							if(reult.code==100){
-								alert("注册成功！！");
+							if(result.code==100){
+								//alert("注册成功！！");
 								window.location.href="${APP_PATH}"+result.extend.path;
 							}else{
 								alert("注册失败！！");
@@ -196,7 +196,7 @@
 						data:"empid="+empid,
 						async:false,
 						success:function(result){
-							alert("返货："+result.code);
+							//alert("返货："+result.code);
 							if(result.code==100){
 								flag=1;
 							}else{

@@ -97,9 +97,9 @@
 									id="book_room_edit_select">
 								</select>
 								<!-- 会议室信息 -->
-								<span id="edit_book_address_span"></span> <br> <span
-									id="edit_book_max_num_span"></span> <br> <span
-									id="edit_book_equip_span"></span>
+								<span id="book_address_span"></span> <br> <span
+									id="book_max_num_span"></span> <br> <span
+									id="book_equip_span"></span>
 							</div>
 						</div>
 
@@ -476,18 +476,10 @@
 					//alert(item[0].roomAddress);
 				}
 			});
+			showRoomInfo(ele);
 			//添加选择框失去焦点时显示会议室信息
 			$(ele).blur(function() {
-				var ind =$("#book_room_add_select").find("option:selected").attr("ddd");
-				$.each(room_info_result.extend.lists,function(index, item) {
-						if (index == ind) {document.getElementById("book_address_span").innerText = "位置："
-							+ item.roomAddress;
-						$("#book_max_num_span").text("最多人数："+ item.roomMaxNum);
-						// $("#book_max_num_address_span").append("位置："+item.roomAddress+"&emsp;&emsp;"+
-						// 	"可容纳人数："+item.roomMaxNum);
-						$("#book_equip_span").text("已有设备："+ item.roomEquipment);
-					}
-				});
+				showRoomInfo(ele);
 			});
 			//判断员工号是否存在
 			$("#book_people_id_add").blur(function() {
@@ -512,7 +504,19 @@
 				});
 			});
 		}
-		
+		/* 展示房间信息 */
+		function showRoomInfo(ele) {
+			var ind =$(ele).find("option:selected").attr("ddd");
+			$.each(room_info_result.extend.lists,function(index, item) {
+					if (index == ind) {
+						$("#edit_book_address_span").text( "位置："+item.roomAddress);
+						$("#edit_book_max_num_span").text("最多人数："+ item.roomMaxNum);
+						// $("#book_max_num_address_span").append("位置："+item.roomAddress+"&emsp;&emsp;"+
+						// 	"可容纳人数："+item.roomMaxNum);
+						$("#edit_book_equip_span").text("已有设备："+ item.roomEquipment);
+				}
+			});
+		}
 		//模态框里保存预定记录
 		$("#book_add_save_btn").click(function() {
 			//1、校验数据,,正则表达式
@@ -539,8 +543,6 @@
 		$(document).on("click","#table_edit_btn",function () {
 			reset_form("#bookEditModal form");
 			getRoomInfo("#book_room_edit_select");
-			//把员工id传递给模态框的更新按钮
-			
 			$("#book_edit_save_btn").attr("edit_id",$(this).attr("index"));
 			$("#bookEditModal").modal({
 				backdrop:"static"
@@ -563,7 +565,7 @@
 						var osel=document.getElementById("book_room_edit_select"); //得到select的ID
 						var opts=osel.getElementsByTagName("option");//得到数组option
 						var i=0;				
-						for(;i<2;i++){
+						for(;i<opts.length;i++){
 							if(opts[i].text==results.extend.book.preRoomNum){
 								alert("ok");
 								opts.selected=true;

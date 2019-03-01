@@ -13,7 +13,13 @@ public class RoomInfo {
 
     private String roomOther;
 
-    public RoomInfo(Integer roomNum, String roomName, String roomAddress, Integer roomMaxNum, String roomEquipment,
+    @Override
+	public String toString() {
+		return "RoomInfo [roomNum=" + roomNum + ", roomName=" + roomName + ", roomAddress=" + roomAddress
+				+ ", roomMaxNum=" + roomMaxNum + ", roomEquipment=" + roomEquipment + ", roomOther=" + roomOther + "]";
+	}
+
+	public RoomInfo(Integer roomNum, String roomName, String roomAddress, Integer roomMaxNum, String roomEquipment,
 			String roomOther) {
 		super();
 		this.roomNum = roomNum;

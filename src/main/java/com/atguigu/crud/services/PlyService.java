@@ -24,6 +24,7 @@ public class PlyService {
 	 */
 	public List<Ply> selectPingByNum(Integer num) {
 		PlyExample plyExample = new PlyExample();
+		plyExample.setOrderByClause("ply_time desc");
 		Criteria criteria = plyExample.createCriteria();
 		criteria.andPlyBookNumEqualTo(num);
 		

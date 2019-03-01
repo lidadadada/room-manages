@@ -39,10 +39,14 @@ public class Book {
 
 	@Override
 	public String toString() {
-		return "Book [serialNum=" + serialNum + ", prePeopleId=" + prePeopleId + ", preRoomNum=" + preRoomNum
+		String aString = "Book [serialNum=" + serialNum + ", prePeopleId=" + prePeopleId + ", preRoomNum=" + preRoomNum
 				+ ", preTheme=" + preTheme + ", preDay=" + preDay + ", preStartTime=" + preStartTime + ", preEndTime="
 				+ preEndTime + ", preJion=" + preJion + ", preMemberPath=" + preMemberPath + ", prePicturePath="
-				+ prePicturePath + ", other=" + other + ", peopleInfo=" + peopleInfo.toString() + "]";
+				+ prePicturePath + ", other=" + other + ", peopleInfo=";
+		if(peopleInfo!=null) {
+			aString.concat(peopleInfo.toString());
+		}
+		return aString;
 	}
 
 	public PeopleInfo getPeopleInfo() {

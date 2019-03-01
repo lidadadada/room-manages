@@ -48,5 +48,18 @@ public class RoomService {
 	public void deleteByPrimaryKey(Integer num) {
 		roomInfoMapper.deleteByPrimaryKey(num);
 	}
+	
+	/**
+	 * 根据会议室名字查询
+	 * @param string
+	 * @return 
+	 */
+	public List<RoomInfo> selectByRoomName(String name) {
+		RoomInfoExample roomInfoExample = new RoomInfoExample();
+		com.atguigu.crud.bean.RoomInfoExample.Criteria createCriteria = roomInfoExample.createCriteria();
+		System.out.println("根据会议室名字查询:"+name);
+		createCriteria.andRoomNameEqualTo(name);
+		return roomInfoMapper.selectByExample(roomInfoExample);
+	}
 
 }

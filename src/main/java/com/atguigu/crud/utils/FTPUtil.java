@@ -136,7 +136,7 @@ public class FTPUtil {
 	 * @param fis
 	 *            上传的文件字节流
 	 * @param ftpFileName
-	 *            上传到服务器的文件名
+	 *            上传到服务器的文件名      eg:people/a.txt    FTPConfig.peopleImagePath+"a.txt"
 	 * @param ftpDirectory
 	 *            上传到FTP的目录
 	 * @return
@@ -149,7 +149,7 @@ public class FTPUtil {
 		if (ftpClient != null) {
 			try {
 				String path = ftpFileName.substring(0, ftpFileName.lastIndexOf("/"));
-				String filename = ftpFileName.substring(ftpFileName.lastIndexOf("/"), ftpFileName.length());
+				String filename = ftpFileName.substring(ftpFileName.lastIndexOf("/")+1, ftpFileName.length());
 				logger.info("分割路径：path：/" + path + "filename：" + filename);
 				ftpClient.changeWorkingDirectory("/" + path);
 				String[] doCommandAsStrings = ftpClient.doCommandAsStrings("pwd", "");
@@ -163,7 +163,7 @@ public class FTPUtil {
 				// 设置文件类型（二进制）
 				ftpClient.setFileType(FTPClient.BINARY_FILE_TYPE);
 				// 上传
-				flag = ftpClient.storeFile("/" + new String(filename.getBytes("utf-8"),"iso-8859-1"), fis);
+				flag = ftpClient.storeFile(filename, fis);
 				if(flag) {
 					logger.info("上传成功！！！！！！");
 				}
@@ -245,20 +245,19 @@ public class FTPUtil {
 	 *            要下载的文件名
 	 * @param localPath
 	 *            下载后保存到本地的路径
-	 * @return
+	 * @return		people/11join.txt", "D:/room/room-manages
 	 */
 	public boolean retrieveFile(String pathFileName, String localPath) {
 		String path = pathFileName.substring(0, pathFileName.lastIndexOf("/"));
 		String filename = pathFileName.substring(pathFileName.lastIndexOf("/") + 1, pathFileName.length());
 		// 初始表示下载失败
 		boolean success = false;
-		// 表示是否连接成功
-		boolean result = false;
 		File file = new File(localPath);
 		if (!file.exists()) {
 			file.mkdirs();
 		}
 		try {
+			System.out.println("工作路径：："+path );
 			ftpClient.changeWorkingDirectory("/" + path);
 			// 列出该目录下所有文件
 			FTPFile[] fs = ftpClient.listFiles();
@@ -269,10 +268,12 @@ public class FTPUtil {
 					System.out.println("成功进入localPath ：" + localPath + "/" + ff.getName());
 					// 根据绝对路径初始化文件
 					File localFile = new File(localPath + "/" + ff.getName());
+					//System.out.println(1);
 					// 输出流
 					OutputStream is = new FileOutputStream(localFile);
 					// 下载文件
 					success = ftpClient.retrieveFile(ff.getName(), is);
+					//System.out.println(2);
 					if (success) {
 						logger.info("从FTP服务器下载文件状态成功");
 					} else {
@@ -283,7 +284,7 @@ public class FTPUtil {
 			}
 
 		} catch (IOException e) {
-			logger.error("从FTP服务器下载文件异常", e);
+			logger.error("从FTP服务器下载文件异常"+e.getMessage());
 		}
 		return success;
 	}
@@ -333,11 +334,15 @@ public class FTPUtil {
 		try {
 			// 默认文件不存在
 			result = false;
+			String path = pathFileName.substring(0, pathFileName.lastIndexOf("/"));
+			String filename = pathFileName.substring(pathFileName.lastIndexOf("/") + 1, pathFileName.length());
+			ftpClient.changeWorkingDirectory(path);// 切换ftp目录
 			// 获取文件操作目录下所有文件名称
 			String[] remoteNames = ftpClient.listNames();
 			// 循环比对文件名称，判断是否含有当前要下载的文件名
 			for (String remoteName : remoteNames) {
-				if (pathFileName.equals(remoteName)) {
+				System.out.println(remoteName);
+				if (filename.equals(remoteName)) {
 					result = true;
 				}
 			}
@@ -356,8 +361,10 @@ public class FTPUtil {
 			String path = pathFileName.substring(0, pathFileName.lastIndexOf("/"));
 			String filename = pathFileName.substring(pathFileName.lastIndexOf("/") + 1, pathFileName.length());
 
-			ftpClient.setFileType(FTPClient.BINARY_FILE_TYPE);
-			ftpClient.enterLocalPassiveMode();// 开启被动模式，服务器开放端口给客户端用
+			 ftpClient.setControlEncoding("UTF-8");//设置字符编码
+	            ftpClient.setFileType(FTPClient.BINARY_FILE_TYPE);//设置传输方式为二进制
+	            ftpClient.enterLocalPassiveMode();//开启被动模式，服务器开放端口给客户端用
+		
 			ftpClient.changeWorkingDirectory(path);// 切换ftp目录
 			
 			FTPFile[] ftpFiles = ftpClient.listFiles();// 列出目录及文件

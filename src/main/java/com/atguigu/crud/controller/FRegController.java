@@ -1,5 +1,9 @@
 package com.atguigu.crud.controller;
 
+import static org.junit.Assert.fail;
+
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.List;
 
@@ -19,9 +23,15 @@ import com.atguigu.crud.bean.Msg;
 import com.atguigu.crud.bean.PeopleInfo;
 import com.atguigu.crud.bean.RegPo;
 import com.atguigu.crud.bean.UnEmpid;
+import com.atguigu.crud.common.FTPConfig;
+import com.atguigu.crud.common.UserConfig;
 import com.atguigu.crud.services.PeopleService;
 import com.atguigu.crud.services.UnEmpidService;
+import com.atguigu.crud.utils.FTPUtil;
+import com.atguigu.crud.utils.Md5Util;
+import com.atguigu.crud.utils.PeopleJoinUtil;
 import com.atguigu.crud.utils.RandomValidateCode;
+import com.atguigu.crud.utils.TextUtil;
 
 @Controller
 public class FRegController extends BaseController{
@@ -57,13 +67,38 @@ public class FRegController extends BaseController{
 	@ResponseBody
 	public Msg reg(RegPo regPo) {
 		getLog(this.getClass()).info("注册："+regPo.toString());
-		PeopleInfo peopleInfo = new PeopleInfo();
-		peopleInfo.setPeoPhone(regPo.getPhone());
-		peopleInfo.setPeoPassword(regPo.getPass2());
-		peopleInfo.setPeoEmployeeName(regPo.getEmpname());
-		peopleInfo.setPeoEmployeeId(regPo.getEmpid());
-		peopleService.insertEmployeeSerlactive(peopleInfo);
-		unEmpidService.subByEmpid(regPo.getEmpid());
-		return Msg.success().add("path", "/f_login.jsp");
+		boolean b = unEmpidService.useAEmpid(regPo.getEmpid());
+		if(b) {
+			PeopleInfo peopleInfo = new PeopleInfo();
+			peopleInfo.setPeoPhone(regPo.getPhone());
+			peopleInfo.setPeoPassword(Md5Util.MD5(regPo.getPass2()));
+			peopleInfo.setPeoEmployeeName(regPo.getEmpname());
+			peopleInfo.setPeoEmployeeId(regPo.getEmpid());
+			peopleInfo.setPeoImagePath(UserConfig.defaultPeopleAvatarPath);
+			peopleService.insertEmployeeSerlactive(peopleInfo);
+			
+			FTPUtil ftpUtil = new FTPUtil();
+			File file = new File(UserConfig.basePath);
+			if(!file.exists()) {
+				file.mkdir();
+				logger.info("创建1");
+			}
+			String basePath = PeopleJoinUtil.getJoinPathByEmpid(peopleInfo.getPeoEmployeeId());
+			file = new File(UserConfig.basePath+basePath);
+			try {
+				file.createNewFile();
+				ftpUtil.upload(new FileInputStream(file), FTPConfig.peopleInfoPath+basePath);
+				file.delete();
+				ftpUtil.close();
+			} catch (IOException e) {
+				// TODO 自动生成的 catch 块
+				e.printStackTrace();
+			}
+			
+			return Msg.success().add("path", "/f_login.jsp");
+		}else {
+			return Msg.fail();
+		}
+		
 	}
 }

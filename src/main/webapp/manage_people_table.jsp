@@ -469,7 +469,7 @@
 	/* 显示表里的删除按钮事件绑定 */
 	$(document).on("click","#table_delete_btn",function () {
 		var index=$(this).attr("index");
-		alert(index);
+	//	alert(index);
 		BootstrapDialog.show({  
             title: '警告',  
             message: '确认删除该条记录？？？',  

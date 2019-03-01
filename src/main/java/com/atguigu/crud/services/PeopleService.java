@@ -1,5 +1,8 @@
 package com.atguigu.crud.services;
 
+import static org.hamcrest.CoreMatchers.startsWith;
+
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,14 +59,6 @@ public class PeopleService {
 		return peopleInfoMapper.selectByExample(example);
 	}
 	/**
-	 * 自适应更新员工信息
-	 * @param peopleInfo
-	 */
-	public void update(PeopleInfo peopleInfo) {
-		peopleInfoMapper.updateByPrimaryKeySelective(peopleInfo);
-		System.out.println("++++++"+peopleInfo.toString());
-	}
-	/**
 	 * 根据主键删除员工
 	 * @param num
 	 */
@@ -112,5 +107,55 @@ public class PeopleService {
 		criteria.andPeoPhoneEqualTo(phone);
 		return peopleInfoMapper.selectByExample(example);
 	}
-
+	
+	/**
+	 * 有选择性地跟新
+	 * @param peopleInfo
+	 * @return 
+	 */
+	public boolean updateByPrimaryKeySelective(PeopleInfo peopleInfo) {
+		int i = peopleInfoMapper.updateByPrimaryKeySelective(peopleInfo);
+		if(i==1) {
+			return true;
+		}else {
+			return false;
+		}
+		
+	}
+	/**
+	 * 根据例表的id查询
+	 * @param list
+	 * @return 
+	 */
+	public List<PeopleInfo> selectByPrimaryEmployeeId(ArrayList<String> list) {
+		PeopleInfoExample example = new PeopleInfoExample();
+		com.atguigu.crud.bean.PeopleInfoExample.Criteria criteria = example.createCriteria();
+		ArrayList<Integer> arrayList = new ArrayList<Integer>();
+		if(list.size()>0) {
+			for (String string : list) {
+				System.out.println("________"+string+"___________");
+				if(!string.trim().isEmpty()) {
+					System.out.println("________"+string+"___________");
+					arrayList.add(Integer.parseInt(string));					
+				}
+			}
+			if(arrayList.size()>0) {
+				criteria.andPeoEmployeeIdIn(arrayList);
+				return peopleInfoMapper.selectByExample(example);
+			}
+		}
+		return null;
+	}
+	
+	/**
+	 * 根据手机号查询
+	 * @param mydata
+	 * @return 
+	 */
+	public List<PeopleInfo> selectByPhone(String mydata) {
+		PeopleInfoExample example = new PeopleInfoExample();
+		com.atguigu.crud.bean.PeopleInfoExample.Criteria criteria = example.createCriteria();
+		criteria.andPeoPhoneEqualTo(mydata);
+		return peopleInfoMapper.selectByExample(example);
+	}
 }

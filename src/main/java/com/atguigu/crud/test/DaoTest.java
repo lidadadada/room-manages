@@ -3,9 +3,11 @@ package com.atguigu.crud.test;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -16,16 +18,25 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import com.atguigu.crud.bean.Book;
 import com.atguigu.crud.bean.BookExample;
+import com.atguigu.crud.bean.Msg;
 import com.atguigu.crud.bean.BookExample.Criteria;
+import com.atguigu.crud.common.FTPConfig;
+import com.atguigu.crud.controller.HeadController;
 import com.atguigu.crud.bean.PeopleInfo;
+import com.atguigu.crud.bean.RoomInfo;
 import com.atguigu.crud.dao.BookMapper;
 import com.atguigu.crud.dao.PeopleInfoMapper;
 import com.atguigu.crud.dao.RoomInfoMapper;
+import com.atguigu.crud.services.JoinApplyService;
 import com.atguigu.crud.services.PeopleService;
+import com.atguigu.crud.services.RoomService;
 import com.atguigu.crud.utils.FTPUtil;
+import com.atguigu.crud.utils.Md5Util;
+import com.atguigu.crud.utils.TextUtil;
 import com.atguigu.crud.utils.TimeUtil;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -36,10 +47,11 @@ public class DaoTest {
 	@Autowired
 	PeopleInfoMapper peopleInfo;
 	@Autowired
-	RoomInfoMapper roomInfo;
+	RoomService roomService;
 	@Autowired
 	PeopleService peopleService;
-
+	@Autowired
+	JoinApplyService joinApplyService;
 	public void testBook() {
 		System.out.println("fjjjjjjjjjj");
 		List<Book> lists = bookMapper.selectByExample(null);
@@ -84,14 +96,44 @@ public class DaoTest {
 	/**
 	 * 测试log4J
 	 */
-	@Test
+	
 	public void testLog() {
 
-		BookExample bookExample = new BookExample();
-		Criteria createCriteria = bookExample.createCriteria();
-		createCriteria.andPreThemeLike("%ss%");
-		List<Book> selectByExample = bookMapper.selectByExample(bookExample);
-		System.out.println("dddd:"+selectByExample.size());
+		//FTPUtil ftpUtil = new FTPUtil();
+		//File file = new File(this.getClass().getResource("bookDefaultImage.png").getPath());
+		//System.out.println(this.getClass().getResource("src/main/resources/defaultImage/bookDefaultImage.jpg").toString());
+		try {
+			FileInputStream fileInputStream = new FileInputStream(new File("src/main/resources/defaultImage/bookDefaultImage.jpg"));
+			System.out.println(this.getClass().getClassLoader().getResource("bookDefaultImage.jpg").getPath());
+		} catch (FileNotFoundException e) {
+			// TODO 自动生成的 catch 块
+			e.printStackTrace();
+		}
+
+		if(new File("src/main/resources/defaultImage/bookDefaultImage.jpg").exists()) {
+			System.out.println("lll");
+		}
+		
 	}
+	
+	/**
+	 * 测试ftp下载
+	 */
+	@Test
+	public  void testFtp() {
+		/*FTPUtil ftpUtil = new FTPUtil();
+		ftpUtil.retrieveFile("people/11join.txt", "D:/room/room-manages/");
+		ftpUtil.close();
+		joinApplyService.selectByBookId(120, 123);*/
+		/*String s = "aa.txt";
+		System.out.println(s.substring(0,s.lastIndexOf(".")));*/
+		//TimeUtil.stringToDate("", model)
+	/*	System.out.println(Md5Util.MD5("123"));
+		System.out.println(Md5Util.MD5("123"));*/
+	
+		
+	}
+	
+	
 
 }

@@ -37,6 +37,12 @@
 <script src="${APP_PATH }/static/js/util.js" ></script>
 
 
+	<link href="${APP_PATH }/static/font-awesome/css/fontawesome.css" rel="stylesheet">
+	<link href="${APP_PATH }/static/nav/bootsnav.css" rel="stylesheet">
+	<link href="${APP_PATH }/static/nav/overwrite.css" rel="stylesheet">
+            <link href="${APP_PATH }/static/nav/style.css" rel="stylesheet">
+	<script src="${APP_PATH }/static/nav/bootsnav.js"></script>
+	
  <style>
   #sortable { list-style-type: none; margin: 0; padding: 0; width: 60%; }
   #sortable li { margin: 0 3px 3px 3px; padding: 0.4em; padding-left: 1.5em; font-size: 1.4em; height: 18px; }
@@ -62,9 +68,105 @@
 	#searchlist{
 		margin-bottom: 10px;
 	}
+	
+	
+			#total{
+				padding: 0px;
+			}
+			#total>p{
+				margin-bottom: 2px;
+			}
+			
+			#head_img{
+				width: auto;
+				height: auto;
+				max-width: 100%;
+				max-height: 100%;
+			}
 </style>
 </head>
 <body style="position:relative;">
+
+<!-- Start Navigation -->
+    <nav class="navbar navbar-default bootsnav">
+        <div class="container">  
+            <!-- Start Atribute Navigation -->
+            <div class="attr-nav">
+                <ul>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" style="padding:15 15 15 15;" >
+                            <i class="fa">
+                            	<div class="badge" style="width: 50px; height: 50px; border-radius: 50%; border: 3px solid #eee; overflow: hidden;">  
+							            <div style="text-align:center;">
+							            	<img id="head_img" src="${APP_PATH }/static/images/bg-01.jpg"  /> 
+							            </div> 	
+							     </div> 
+                            </i>	
+                            <span class="badge" id="badgeNumSpan">3</span>
+                        </a>
+                        <ul class="dropdown-menu cart-list" id="nav_list">
+                            <li>
+ 									 <h6><a href="#">申请入会列表</a></h6>
+                            </li>
+                           
+                            <!-- <li class="total">
+                               <div>
+                               		<p>申请者：<span id="nav_name_span"></span>&nbsp;&nbsp;&nbsp;
+                               			员工号：<span id="nav_empid_span"></span>
+                               		</p>
+                               		<p>
+                               			申请信息：<span id="nav_applyinfo_span"></span>
+                               			<button>拒绝</button><button>同意</button>
+                               		</p>
+                               </div>
+                            </li> -->
+                            		
+                          
+                        </ul>
+                    </li>
+                </ul>
+            </div>        
+            <!-- End Atribute Navigation -->
+
+            <!-- Start Header Navigation -->
+            <div>
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-menu">
+                    <i class="fa fa-bars"></i>
+                </button>
+                <a class="navbar-brand" href="#brand"><img src="${APP_PATH }/static/nav/logo-black.png" class="logo" alt=""></a>
+            </div>
+            
+            <!-- End Header Navigation -->
+
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse" id="navbar-menu">
+                
+                    <div style="margin-bottom: 10px;margin-left: 40%;width: 100%;margin-top:40px;font-weight: bold;font-size: 17px;	 ">
+                    	<a href="${APP_PATH }/f_show.jsp">首页</a>    &nbsp; &nbsp;  &nbsp; &nbsp;             
+	           			<a href="${APP_PATH }/f_main.jsp">预定</a>		 &nbsp; &nbsp;  &nbsp; &nbsp; 
+	                    <a href="${APP_PATH }/f_userinfo.jsp">我的信息</a>	&nbsp; &nbsp;  &nbsp; &nbsp;
+	                    <a href="javascript:void(0);" onclick="exit()">注销</a>
+                    </div>
+                
+            </div><!-- /.navbar-collapse -->
+        </div>   
+    </nav>
+    <!-- End Navigation -->
+    <div class="clearfix"></div>
+	<div class="container">
+		<div class="row">
+		    <!-- Start Home -->
+		    <div class="pageheader" style="height: 100px" >	
+		    	<div class="col-md-offset-1">	
+		            <h2 class="title">购物车布局导航菜单</h2>
+		            <p>Navigation menu with shopping cart dropdown</p>
+		       </div>
+		    </div>
+	    </div>
+ </div>
+ 
+
 <!-- 申请参加会议模态框 -->
 	<div class="modal fade" id="bookjoinAddModal" tabindex="-1" role="dialog"
 		aria-labelledby="myModalLabel">
@@ -145,33 +247,41 @@
 	</div>
 <div class="container">
 <div class="rol">
-	<div style="height: 50px">dd</div>
+	<div style="height: 40px"></div>
 </div>
-	<div class="rol">
+	<div class="row">
 		<div class="col-md-8">
 			<div class="rol" id="searchlist">
 				<div class="col-md-11 input-group input-group-sm">
 				  <span class="input-group-addon" id="sizing-addon3">主题</span>
-				  <input id="search_theme" type="text" class="form-control" placeholder="Username" aria-describedby="sizing-addon3">
+				  <input id="search_theme" type="text" class="form-control" placeholder="" aria-describedby="sizing-addon3">
 				 
 				 <span class="input-group-addon" id="sizing-addon3" >时间</span>
-				  <input id="search_date" type="date" class="form-control" placeholder="Username" aria-describedby="sizing-addon3">
+				  <input id="search_date" type="date" class="form-control" placeholder="" aria-describedby="sizing-addon3">
 				  
 				  <span class="input-group-addon" id="sizing-addon3">负责人</span>
-					<input id="search_people" type="text" class="form-control" placeholder="Username" aria-describedby="sizing-addon3">
+					<input id="search_people" type="text" class="form-control" placeholder="" aria-describedby="sizing-addon3">
 				  	
 				 <span class="input-group-addon" id="sizing-addon3">会议室</span>
-				  <input id="search_room" type="text" class="form-control" placeholder="Username" aria-describedby="sizing-addon3">
+				  <input id="search_room" type="text" class="form-control" placeholder="" aria-describedby="sizing-addon3">
 				</div>	
-				<div class="col-md-1 col-md-offset-10">	
-				 	<button id="search_btn" type="button" class="btn btn-default" style="margin-bottom: 10px">搜索</button>
+	
+				<div class="col-md-8 col-md-offset-4" style="margin-top: 5px">	
+					<div class="btn-group" role="group" aria-label="...">
+					  <button id="clear_search_btn" type="button" class="btn btn-default">清除</button>
+					  <button type="button" id="search_btn" style="margin-left: 20px" class="btn btn-default">搜索</button>		
+					  <button type="button" id="myjoin_btn" style="margin-left: 40px" class="btn btn-default">我参加的会议</button>
+					  <button type="button" id="getall_btn" style="margin-left: 20px" class="btn btn-default">查看全部</button>
+					</div>	
 				 </div>
 			</div>
-		
-			<div class="rol" style="height: 15px;">
+			<div class="row">
+				
+			</div>
+			<div  style="height: 15px;margin: 0px;padding: 0px;">	
 				<HR style="border:3 double #987cb9" width="100%" color=#000000 SIZE=100>
 			</div>
-			<div class="rol">
+			<div class="row" style="margin: 0 auto;position: relative;left: 20px">
 				<div id="list">
 					<ul id="lists">
 						
@@ -201,7 +311,7 @@
 					
 				
 			</div>
-			<div class="containerss" style="position:absolute; height:700px; overflow:scroll ">
+			<div class="containerss" style="position:absolute; height:1400px; overflow:scroll ">
 				<div class="commentbox">
 					<textarea cols="80" rows="50" placeholder="来说几句吧......" class="mytextarea" id="content"></textarea>
 					<div class="btn btn-info pull-right" id="comment">评论</div>
@@ -213,10 +323,110 @@
 	</div>
 	</div>
 </div>
+<!-- 初始化导航栏 -->
+<script type="text/javascript">
+	var aPeople ; //保存全局登陆者
+	console.log("初始化导航栏");
+	navInit() ;
+	function navInit() {
+		$.ajax({
+			url : "${APP_PATH}/f/nav/getPeople",	
+			type : "GET",	
+			async:false,
+			success : function(result) {
+				console.log("导航条数据");
+				console.log(result);
+				if(result.code==100){
+					aPeople =result;
+					exNavData(result);
+				}else{
+					window.location.href = "${APP_PATH}/"+result.extend.path;
+				}
+			},
+			error:function(a){
+				alert("error");
+			}
+			
+		});
+	}
+	function exNavData(result) {
+		var peoinfo = result.extend.peopleInfo;
+		$("#head_img").attr("src",peoinfo.peoImagePath);
+		var eNavList =document.getElementById("nav_list");
+		var i= 0;
+		//alert(result.extend.joinList.length);	
+		if(result.extend.joinList.length>1){
+			$.each(result.extend.joinList,function(index,item){
+				i++;
+				if(item.joinApply.joinDealState==1){
+					var eHtml = "<li style='height:130px' class='total'><div><p style='margin-bottom: 2px;'>申请者："+item.peopleInfo.peoEmployeeName
+					+"</span>&nbsp;&nbsp;&nbsp;员工号："+ item.peopleInfo.peoEmployeeId+"</span>"
+					+"</p><p style='margin-bottom: 2px;'>申请信息：" +item.joinApply.joinOther
+					+"</p><p style='margin-bottom: 2px;'><button index='"+item.joinApply.joinId+"' id='navReject' style='margin-left:45px;margin-right:30px;with:15px;font-size:10px;'>拒绝</button>"
+					+"<button  index='"+item.joinApply.joinId+"' id='navAgree' style='with:15px;font-size:10px;'>同意</button></p></div></li>";
+					eNavList.innerHTML+=eHtml;		
+				}		
+			});
+			$("#badgeNumSpan").attr("style","color:#f00");
+		}else{
+			eNavList.innerHTML += "<li><span>当前无事件待处理</span></li>";
+		}
+		document.getElementById("badgeNumSpan").innerHTML=i;   
+	}
+		/* 拒绝申请按钮事件处理 */
+		$(document).on("click","#navReject",function () { 
+			var index= $(this).attr("index");
+			$.ajax({
+				url : "${APP_PATH}/f/nav/reject",
+				type : "GET",
+				data:"mydata="+index,
+				success : function(result) {
+						console.log("拒绝");
+						console.loh(result);
+						if(result.code==100){
+							navInit() ;
+						}else{
+							alert("拒绝失败");
+						}
+					}		
+				});
+		});	
+		/* 同意申请按钮事件处理 */
+		$(document).on("click","#navAgree",function () { 
+			var index= $(this).attr("index");
+			$.ajax({
+				url : "${APP_PATH}/f/nav/agree",
+				type : "GET",
+				data:"mydata="+index,
+				success : function(result) {
+						console.log("同意");
+						console.loh(result);
+						if(result.code==100){
+							navInit() ;
+						}else{
+							alert("同意失败");
+						}
+					}		
+				});
+		});
+		/* 注销 */
+		function exit() {
+			$.ajax({
+				url : "${APP_PATH}/f/nav/exit",
+				type : "GET",
+				success : function(result) {
+					window.location.href = "${APP_PATH}/" + result.extend.path;
+				}
+			});
+		}				
+					
+	
+</script>	
 	 <script type="text/javascript">
+	 var flagState =0;	//保存全局状态 1 ：搜索	2：我的参与	3：普通
 	//获取系统当前时间
 	var first =0;	//保存第一条预定的序列号-->右边功能显示对应的预定序列号
-	var aindexlist=-1; //保存进入右边菜单的左边的序号
+	var aindexlist=-1; //保存进入右边菜单的左边的序号		
 	var bookdata; //保存预定数据
 		//获得用户本地当前时间
 		function getDate(){
@@ -242,42 +452,11 @@
 		//获取预定数据
 		function init_book(pn) {
 			console.log("开始获取预定数据");
-			$.ajax({
-				url : "${APP_PATH}/f/show/getBook",
-				data : "pn=" + pn,
-				async: false,
-				type : "GET",
-				success : function(result) {
-					if (result.code == 100) {
-						//alert("5555");
-						console.log("获取预定数据成功,book:");
-						console.log(result);
-						bookdata=result;
-						first=	result.extend.pageInfo.list[0].serialNum;
-						//解析数据
-						ex_book_data(result);
-						//2、解析显示分页信息
-						build_page_info(result);
-						//3、解析显示分条数据
-						build_page_nav(result);
-								
-						if(result.extend.pageInfo.pageSize>0){
-							addreply(first,1);
-						}
-					} else {
-						console.log("已经预定数据失败");
-						var p = result.extend.path;
-						// alert(p);
-						window.location.href = "${APP_PATH}" + p;
-						ex_book_data(result);
-					}
-				}
-			});
+			searchDel(1,3);
 		}
-		
 		 /* 解析弹框数据 *//* 弹出框初始化 */
 		 function built_alert(numa) {
-			 console.log("built_alert:"+numa);
+			 console.log("built_alertss:"+numa);
 			 console.log(bookdata);		
 			 var other =bookdata.extend.pageInfo.list[numa].other;
 			 $("#meeting_info").popover({
@@ -293,14 +472,14 @@
 			//首先清空数据
 			$("#lists").empty();
 			var ui = document.getElementById("lists");
-			if(result.extend.pageInfo.pageSize>0){
+			if(result.extend.pageInfo.total>0){
 				var list = result.extend.pageInfo.list;
 
 				//alert("d"+list[0].serialNum);
 				$.each(list,function(index,item){
 					var sub1 = "<div class='hd_c_left_thumb'> "+	
 					"<a href='#' onclick='addreply("+item.serialNum+","+index+")' target='_Self'>"+
-							"<img src='/myimg/people/1.png' />"+
+							"<img src='"+item.prePicturePath+"' />"+
 					"</a> </div>";
 					var sub21 ="<div class='hd_c_left_title b'>"+
 					"<a href='#' onclick='addreply("+item.serialNum+","+index+")' target='_Self'>会议主题："+
@@ -344,13 +523,14 @@
 		}
 		//右面功能页面处理
 		function addreply(num,indexlist) {
+			
 			built_alert(indexlist);
 			console.log(num+"::::::::"+indexlist);
 			aindexlist =indexlist;
 			/* 根据是否加入，决定布局 */
 			var cont="#indexlist"+indexlist;
 			var isinv=$(cont).attr("isin");
-			var applyState=$(".hd_c_left_btn").attr("applyState");
+			var applyState=$(cont).attr("applyState");
 			var menu_right_to=document.getElementById("menu_right_up");
 			var menu_file_manage=document.getElementById("menu_file_manage");
 			console.log(isinv+":::"+applyState);
@@ -453,13 +633,15 @@
 		});
 		/* 申请参见会议模态框按钮 */
 		$("#book_join_btn").click(function() {
+			var data = document.getElementById("book_join_other").value+"_"+first;	
 			$.ajax({
 				url:"${APP_PATH}/f/show/join",
 				type:"GET",
-				data:"join_data="+first,
+				data:"join_data="+data,
 				success:function(result){
+					console.log("book_join_btn:::"+result.code);
 					if(result.code==100){
-						$("#bookFileAddModal").modal('hide');
+						$("#bookjoinAddModal").modal('hide');
 						var menu_right_to=document.getElementById("menu_right_up");
 						menu_right_to.innerHTML = "<button type='button' id='jion_btn' class='btn btn-warning' disabled='disabled'>审核中</button>";
 					}else {
@@ -490,16 +672,38 @@
 		/* 下载文件 */
 		$(document).on("click","#downbtn",function() {
 			var path =$(this).attr("datapath");/* D:\room\room-manages\ */
-			var sp=path.split("/");
+			downloadFile("${APP_PATH}/f/show/down",path);
+		/* 	var sp=path.split("/");
 			path = sp[0]+"_"+sp[1]+"_"+sp[2]+"_"+sp[3];
-			alert(path);
+			//alert(path);
 			$.ajax({
 				url:"${APP_PATH}/f/show/down",
 				type:"POST",
 				data:"path="+path,
-			});	
+				success: function (data) {
+					download(data, "text/html", "dlAjaxCallback.html");		
+				}
+			});	 */
 		});
-	
+
+		function downloadFile(actoinURL,filePath){
+			var form = $("<form></form>");   
+			$('body').append(form);  
+		        form.attr('style','display:none');   
+		        form.attr('target','');
+		        form.attr('method','post');
+		        form.attr('action',actoinURL);//下载文件的请求路径
+		        
+		        
+		        var input1 = $('<input></input>'); 
+		        input1.attr('type','hidden'); 
+		        input1.attr('name','filePath'); 
+		        input1.attr('value',filePath);
+		        form.append(input1);  
+		        
+		        
+		        form.submit();    
+		}
 		/* 解析评论数据 */
 		function ex_list_data(result){
 			var arrs = [];
@@ -562,6 +766,7 @@
 									obj.numId=result.extend.numid;
 									obj.replyBody="";
 									console.log(obj.content);
+									//alert("a");
 									//var user =${ sessionScope.currentUser};
 									$(".comment-list").addCommentList({data:[],add:obj},"${ sessionScope.currentUser}","${APP_PATH}"); 
 								}else{
@@ -642,10 +847,11 @@
 			} else {
 				//添加翻页事件
 				firstPageLi.click(function() {
-					init_book(1);
+					searchDel(1,flagState);
 				});
 				prePageLi.click(function() {
-					init_book(result.extend.pageInfo.pageNum - 1);
+					searchDel(result.extend.pageInfo.pageNum - 1,flagState);
+					
 				});
 			}
 			var nextPageLi = $("<li></li>").append(
@@ -659,10 +865,10 @@
 			} else {
 				//分页事件
 				nextPageLi.click(function() {
-					init_book(result.extend.pageInfo.pageNum + 1);
+					searchDel(result.extend.pageInfo.pageNum + 1,flagState);
 				});
 				lastPageLi.click(function() {
-					init_book(result.extend.pageInfo.pages+1);
+					searchDel(result.extend.pageInfo.pages+1,flagState);
 				});
 			}
 
@@ -673,24 +879,53 @@
 					numLi.addClass("active");
 				}
 				numLi.click(function() {
-					init_book(item);
+					searchDel(item,flagState);
 				});
 				ul.append(numLi);
 			});
 			ul.append(nextPageLi).append(lastPageLi);
 			var navEle = $("<nav></nav>").append(ul).appendTo("#page_nav_area");
 		}
+		 /* 查找我参加的会议事件 */
+		 $("#myjoin_btn").click(function () {
+			 searchDel(1,2);
+		 });
+		 /* 查看全部按钮 */
+		  $("#getall_btn").click(function () {
+			 searchDel(1,3);
+		 });
 		 
 	 	/* 搜索栏事件 */
 	 	$("#search_btn").click(function () {
-	 		var theme=document.getElementById("search_theme").value;
-	 		var date=document.getElementById("search_date").value;
-	 		var people=document.getElementById("search_people").value;
-	 		var room=document.getElementById("search_room").value;
-	 		if(!(isEmpty(theme)&&isEmpty(date)&&isEmpty(people)&&isEmpty(room))){
-	 			var data =theme+"_"+date+"_"+people+"_"+room+"_"+1;
+	 		searchDel(1,1);
+		});
+	 	/* 获取预定数据，初始话  页数，操作状态1：搜索状态	2：我参加的状态		3：普通查询状态 */
+	 	function searchDel(pn,op) {
+	 		var myurl;var data;
+	 		if(op==1){
+	 			flagState=1;
+	 			var theme=document.getElementById("search_theme").value;
+		 		var date=document.getElementById("search_date").value;
+		 		var people=document.getElementById("search_people").value;
+		 		var room=document.getElementById("search_room").value;
+		 		if(!(isEmpty(theme)&&isEmpty(date)&&isEmpty(people)&&isEmpty(room))){
+		 			data =theme+"_"+date+"_"+people+"_"+room+"_"+pn;
+		 		}else{
+		 			return ;
+		 		}
+	 			myurl="${APP_PATH}/f/show/search";
+	 		}else if(op==2){
+	 			flagState=2;
+	 			myurl="${APP_PATH}/f/show/myjoin";
+	 			data = pn;
+	 		}else{
+	 			flagState=3;
+	 			myurl= "${APP_PATH}/f/show/getBook",
+	 			data = pn;
+	 		}
+	 		
 		 		$.ajax({
-						url:"${APP_PATH}/f/show/search",
+						url:myurl,
 						type:"GET",
 						data:"mydata="+data,
 						success : function(result) {
@@ -699,6 +934,7 @@
 								console.log("获取预定数据成功,book:");
 								console.log(result);
 								bookdata=result;
+								if(result.extend.pageInfo.total>0){
 								first=	result.extend.pageInfo.list[0].serialNum;
 								//解析数据
 								ex_book_data(result);
@@ -706,20 +942,33 @@
 								build_page_info(result);
 								//3、解析显示分条数据
 								build_page_nav(result);
-										
-								if(result.extend.pageInfo.pageSize>0){
-									addreply(first,1);
+									addreply(first,0);
+								}else{
+									$("#lists").empty();
+									var listsInfohtml = "<p><span>无数据!!!</span></p>";
+									var listsInfo=document.getElementById("lists");
+									listsInfo.innerHTML = listsInfohtml;
 								}
 							} else {
 								console.log("已经预定数据失败");
 								var p = result.extend.path;
 								// alert(p);
-								//window.location.href = "${APP_PATH}" + p;
+								if(!(typeof p === 'undefined')){
+									window.location.href = "${APP_PATH}" + p;
+								}
 								//ex_book_data(result);
 						}}
 		 		});
 	 		}
-		});
+		
+	 	/* 清除搜索栏 */
+	 	$("#clear_search_btn").click(function(){
+	 		document.getElementById("search_theme").value="";
+	 		document.getElementById("search_date").value="";
+	 		document.getElementById("search_people").value="";
+	 		document.getElementById("search_room").value="";
+	 		searchDel(1,3);
+	 	});
 	 	/* 为空判断 */
 	 	  function isEmpty(input) { 
 			   return input == null || input == ''; 

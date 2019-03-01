@@ -106,6 +106,7 @@
 				if(result.code==100){
 					 var p= result.extend.path;
 					 //alert(p);
+					 // window.location.href ="${APP_PATH}/f_userinfo.jsp";
 					 window.location.href = "${APP_PATH}"+p;
 				 }
 				 else{

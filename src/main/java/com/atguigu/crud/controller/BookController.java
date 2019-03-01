@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.accessibility.AccessibleRelation;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
@@ -14,7 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PathVariable;
 /*
  * 面向关于预定的请求
@@ -25,12 +23,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.atguigu.crud.bean.Book;
-import com.atguigu.crud.bean.BookInput;
-import com.atguigu.crud.bean.BookPo;
+import com.atguigu.crud.bean.BookInputs;
 import com.atguigu.crud.bean.ManagePeople;
 import com.atguigu.crud.bean.Msg;
-import com.atguigu.crud.bean.PeopleInfo;
-import com.atguigu.crud.common.ManageConfig;
+import com.atguigu.crud.po.BookPo;
 import com.atguigu.crud.services.BookService;
 import com.atguigu.crud.services.PeopleService;
 import com.atguigu.crud.utils.TimeUtil;
@@ -38,7 +34,7 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 
 @Controller
-public class BookController extends BaseController{
+public class BookController extends BaseController {
 	@Autowired
 	BookService bookService;
 	@Autowired
@@ -51,7 +47,7 @@ public class BookController extends BaseController{
 	 */
 	@RequestMapping(value = "/book/manage/update/", method = RequestMethod.POST)
 	@ResponseBody
-	public Msg update(BookInput book) {
+	public Msg update(BookPo book) {
 		Book books = new Book();
 		books.setSerialNum(book.getSerialNum());
 		books.setPrePeopleId(book.getPrePeopleId());
@@ -115,11 +111,10 @@ public class BookController extends BaseController{
 		if (managePeople != null) {
 			PageHelper.startPage(pn, 10); // 后面跟着的查询，就自动分页查询了
 			List<Book> lists = bookService.getAll();
-			System.out.println("getAll:"+lists.size());
-			/*for (BookPo book : lists) {
-				System.out.println(book.toString());
-				System.out.println(book.getPeopleInfo().toString());
-			}*/
+			System.out.println("getAll:" + lists.size());
+			for (Book book : lists) {
+				book.setPeopleInfo(peopleService.selectByPrimaryEmployeeId(book.getPrePeopleId()).get(0));
+			}
 			// 使用pageinfo包装查询后的结果，获得各种分页 的信息 5:连续显示5页
 			PageInfo pageInfo = new PageInfo(lists, 5);
 			System.out.println("获取预定数据成功");
@@ -134,7 +129,7 @@ public class BookController extends BaseController{
 	// JSR303校验 导入Hibernate-Vaildator包
 	@RequestMapping(value = "/book_save_model")
 	@ResponseBody
-	public Msg saveBookFromModel(@Valid BookInput book, BindingResult result) {
+	public Msg saveBookFromModel(@Valid BookPo book, BindingResult result) {
 		System.out.println("+++++++++++++++++++book.toString()" + book.toString());
 		System.out.println("保存预定数据");
 		// @Valid申明在封装的时候需要校验 BindingResult封装娇艳的结果
@@ -153,9 +148,10 @@ public class BookController extends BaseController{
 			books.setPrePeopleId(book.getPrePeopleId());
 			books.setPreRoomNum(book.getPreRoomNum());
 			books.setPreTheme(book.getPreTheme());
-			//System.out.println(book.getPreDay()+"日期");
-			//System.out.println(TimeUtil.stringToDate(book.getPreDay()+" 00:00:00", "yyyy-MM-dd HH:mm:ss")+"日期");
-			books.setPreDay(TimeUtil.stringToDate(book.getPreDay()+" 00:00:00", "yyyy-MM-dd HH:mm:ss"));
+			// System.out.println(book.getPreDay()+"日期");
+			// System.out.println(TimeUtil.stringToDate(book.getPreDay()+" 00:00:00",
+			// "yyyy-MM-dd HH:mm:ss")+"日期");
+			books.setPreDay(TimeUtil.stringToDate(book.getPreDay() + " 00:00:00", "yyyy-MM-dd HH:mm:ss"));
 			books.setPreStartTime(TimeUtil.stringToDate(book.getPreStartTime(), "HH:mm:ss"));
 			books.setPreEndTime(TimeUtil.stringToDate(book.getPreEndTime(), "HH:mm:ss"));
 			books.setOther(book.getOther());

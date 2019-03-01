@@ -54,5 +54,17 @@ public class BookFileService {
 		}
 		return list;
 	}
+	/**
+	 * 根据路径查找相对应的文件名字
+	 * @param path
+	 * @return
+	 */
+	public String selectTitleByPath(String path) {
+		BookFileExample bookFileExample = new BookFileExample();
+		Criteria createCriteria = bookFileExample.createCriteria();
+		createCriteria.andFileSavaPathEqualTo(path);
+		return bookFileMapper.selectByExample(bookFileExample).get(0).getFileTitle();
+		
+	}
 
 }

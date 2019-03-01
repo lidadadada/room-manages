@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.atguigu.crud.bean.Book;
-import com.atguigu.crud.bean.BookInput;
+import com.atguigu.crud.bean.BookInputs;
 import com.atguigu.crud.bean.ManagePeople;
 import com.atguigu.crud.bean.Msg;
 import com.atguigu.crud.bean.PeopleInfo;
@@ -42,7 +42,7 @@ public class PeopleController extends BaseController{
 	@RequestMapping(value = "/people/manage/update/", method = RequestMethod.POST)
 	@ResponseBody
 	public Msg update(PeopleInfo peopleInfo) {
-		peopleService.update(peopleInfo);
+		peopleService.updateByPrimaryKeySelective(peopleInfo);
 		return Msg.success();
 	}
 	/*
